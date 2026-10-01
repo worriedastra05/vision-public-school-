@@ -7,10 +7,13 @@ import { authConfig } from "@/auth.config";
 import { db } from "@/lib/db";
 import { students, users, type Role } from "@/db/schema";
 
-const credentialsSchema = z.object({
-  identifier: z.string().min(3),
-  password: z.string().min(1),
-});
+const credentialsSchema = z
+  .object({
+    identifier: z.string().optional(),
+    email: z.string().optional(), // purane cached login page ke liye backward-compat
+    password: z.string().min(1),
+  })
+  .refine((d) => (d.identifier ?? d.email ?? "").trim().length >= 3);
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -24,7 +27,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const parsed = credentialsSchema.safeParse(credentials);
         if (!parsed.success) return null;
 
-        const identifier = parsed.data.identifier.trim();
+        const identifier = (parsed.data.identifier ?? parsed.data.email ?? "").trim();
 
         // ── Identifier EMAIL hai ya ADMISSION NUMBER? dono se login!
         // Student: "VPS20260001"  |  Admin/Superadmin: email
