@@ -1,8 +1,9 @@
-import { and, desc, eq, isNull, or } from "drizzle-orm";
+import { and, desc, eq, isNull, or, sql } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { exams, notices, students } from "@/db/schema";
+import { academicSessions, exams, feePayments, feeStructures, notices, students } from "@/db/schema";
 import { gradeFor } from "@/lib/grades";
+import { expectedForSession, inr } from "@/lib/fees-calcs";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { Reveal } from "@/components/motion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -48,6 +49,30 @@ export default async function StudentDashboard() {
     const mx = latestExam.marks.reduce((s, m) => s + Number(m.maxMarks), 0);
     const pct = mx > 0 ? (t / mx) * 100 : 0;
     latestResult = { label: `${pct.toFixed(1)}%`, hint: `${latestExam.name} • Grade ${gradeFor(pct)}` };
+  }
+
+  // Fees status (due amount)
+  let feeStatus: { label: string; hint: string; accent: "amber" | "emerald" } = {
+    label: "—",
+    hint: "No fee structure",
+    accent: "amber",
+  };
+  if (student) {
+    const [structures, [paid], activeSession] = await Promise.all([
+      db.query.feeStructures.findMany({ where: eq(feeStructures.classId, student.classId) }),
+      db.select({ total: sql<string>`coalesce(sum(${feePayments.amount}::numeric),0)` })
+        .from(feePayments)
+        .where(eq(feePayments.studentId, student.id)),
+      db.query.academicSessions.findFirst({ where: eq(academicSessions.isActive, true) }),
+    ]);
+    if (structures.length > 0) {
+      const expected = expectedForSession(structures, activeSession?.startDate ?? null, student.admissionDate);
+      const due = Math.max(0, expected - Number(paid.total));
+      feeStatus =
+        due > 0
+          ? { label: inr(due), hint: "Pending dues", accent: "amber" }
+          : { label: "Clear ✓", hint: `${inr(Number(paid.total))} paid`, accent: "emerald" };
+    }
   }
 
   return (
@@ -102,7 +127,14 @@ export default async function StudentDashboard() {
           hint={latestResult.hint}
           delay={180}
         />
-        <StatCard label="Pending Fees" value="Phase 6" icon={Wallet} accent="amber" hint="Coming soon" delay={260} />
+        <StatCard
+          label="Fees Status"
+          value={feeStatus.label}
+          icon={Wallet}
+          accent={feeStatus.accent}
+          hint={feeStatus.hint}
+          delay={260}
+        />
         <StatCard label="Notices" value={noticeRows.length} icon={Bell} accent="rose" delay={340} />
       </div>
 

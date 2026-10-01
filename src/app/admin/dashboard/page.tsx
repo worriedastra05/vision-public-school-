@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
-import { and, eq } from "drizzle-orm";
-import { attendance, classes, notices, students, subjects, teachers } from "@/db/schema";
+import { and, eq, sql } from "drizzle-orm";
+import { attendance, classes, feePayments, notices, students, subjects, teachers } from "@/db/schema";
+import { inr } from "@/lib/fees-calcs";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { Reveal } from "@/components/motion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -17,7 +18,7 @@ import {
 export default async function AdminDashboard() {
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
 
-  const [studentCount, teacherCount, classCount, noticeCount, subjectCount, classList, markedToday, presentToday] =
+  const [studentCount, teacherCount, classCount, noticeCount, subjectCount, classList, markedToday, presentToday, [fees]] =
     await Promise.all([
       db.$count(students),
       db.$count(teachers),
@@ -33,6 +34,7 @@ export default async function AdminDashboard() {
       }),
       db.$count(attendance, eq(attendance.date, today)),
       db.$count(attendance, and(eq(attendance.date, today), eq(attendance.status, "PRESENT"))),
+      db.select({ total: sql<string>`coalesce(sum(${feePayments.amount}::numeric),0)` }).from(feePayments),
     ]);
 
   return (
@@ -57,7 +59,14 @@ export default async function AdminDashboard() {
           delay={340}
         />
         <StatCard label="Notices Posted" value={noticeCount} icon={Bell} accent="rose" delay={420} />
-        <StatCard label="Fee Collection" value="Phase 6" icon={Wallet} accent="sky" hint="Coming soon" delay={500} />
+        <StatCard
+          label="Fee Collection"
+          value={inr(Number(fees.total))}
+          icon={Wallet}
+          accent="sky"
+          hint="Total received"
+          delay={500}
+        />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -98,8 +107,8 @@ export default async function AdminDashboard() {
             <CardContent>
               <div className="space-y-2.5">
                 {[
-                  { name: "Phase 6 — Fees & receipts", done: false },
                   { name: "Phase 7 — QR ID cards", done: false },
+                  { name: "Phase 6 — Fees & receipts ✅", done: true },
                   { name: "Phase 5 — Exams, marks & report cards ✅", done: true },
                   { name: "Phase 4 — Attendance ✅", done: true },
                   { name: "Phase 3 — Students, teachers, classes ✅", done: true },
