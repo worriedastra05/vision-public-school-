@@ -1,0 +1,273 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────────
+   🎓 Vision Public School — "Oxford Prestige" Design System
+   Academic Navy + Antique Gold + Ivory Paper + Serif display type.
+   Research: Linear/Stripe restraint + Oxford/Yale prestige branding.
+   ───────────────────────────────────────────────────────────────── */
+
+/* class-based dark mode (theme toggle) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "Noto Sans", sans-serif;
+  --font-display:
+    ui-serif, Georgia, Cambria, "Times New Roman", "Songti SC", serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+  /* ── Academic Navy (brand) — Oxford/Yale deep blue = trust + prestige ── */
+  --color-brand-50: #f3f6fb;
+  --color-brand-100: #e4eaf5;
+  --color-brand-200: #c4d2e8;
+  --color-brand-300: #93aecf;
+  --color-brand-400: #5d82b0;
+  --color-brand-500: #3d6392;
+  --color-brand-600: #2d4f78;
+  --color-brand-700: #274163;
+  --color-brand-800: #223755;
+  --color-brand-900: #1d2f47;
+  --color-brand-950: #131f30;
+
+  /* ── indigo → academic navy (legacy flights map onto the same family) ── */
+  --color-indigo-50: #f3f6fb;
+  --color-indigo-100: #e4eaf5;
+  --color-indigo-200: #c4d2e8;
+  --color-indigo-300: #93aecf;
+  --color-indigo-400: #5d82b0;
+  --color-indigo-500: #3d6392;
+  --color-indigo-600: #2d4f78;
+  --color-indigo-700: #274163;
+  --color-indigo-800: #223755;
+  --color-indigo-900: #1d2f47;
+  --color-indigo-950: #131f30;
+
+  /* ── violet → Antique Gold (legacy gradient ends become gold — rich, not rainbow) ── */
+  --color-violet-50: #fbf8ee;
+  --color-violet-100: #f5eccf;
+  --color-violet-200: #ead69c;
+  --color-violet-300: #ddbd68;
+  --color-violet-400: #cfa343;
+  --color-violet-500: #bf9039;
+  --color-violet-600: #a5782e;
+  --color-violet-700: #855f27;
+  --color-violet-800: #6e4e25;
+  --color-violet-900: #5e4224;
+  --color-violet-950: #352311;
+
+  /* ── fuchsia → soft gold (removes neon) ── */
+  --color-fuchsia-50: #fbf8ee;
+  --color-fuchsia-100: #f5eccf;
+  --color-fuchsia-200: #ead69c;
+  --color-fuchsia-300: #ddbd68;
+  --color-fuchsia-400: #cfa343;
+  --color-fuchsia-500: #bf9039;
+  --color-fuchsia-600: #a5782e;
+
+  /* ── Gold (true accent) ── */
+  --color-gold-50: #fbf8ee;
+  --color-gold-100: #f5eccf;
+  --color-gold-200: #ead69c;
+  --color-gold-300: #ddbd68;
+  --color-gold-400: #cfa343;
+  --color-gold-500: #bf9039;
+  --color-gold-600: #a5782e;
+  --color-gold-700: #855f27;
+  --color-gold-800: #6e4e25;
+  --color-gold-900: #5e4224;
+  --color-gold-950: #352311;
+
+  /* ── Ink / Midnight (deep navy surfaces) ── */
+  --color-midnight-800: #182743;
+  --color-midnight-900: #131f36;
+  --color-midnight-950: #0b1425;
+  --color-ink-950: #0b1425;
+  --color-ink-900: #131f36;
+  --color-ink-800: #182743;
+
+  /* ── Ivory paper (app background) ── */
+  --color-paper: #f6f4ef;
+
+  /* ── Animations (calm — entrance only, koi glow/float nahi) ── */
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.45s ease both;
+  --animate-scale-in: scale-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-shake: shake 0.4s ease-in-out;
+  --animate-gradient-x: none;
+  --animate-float: none;
+  --animate-float-slow: none;
+  --animate-glow-pulse: none;
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(6px); }
+    75% { transform: translateX(-3px); }
+  }
+  @keyframes gradient-x { to { background-position: 200% 50%; } }
+  @keyframes float { to { transform: translateY(-8px); } }
+  @keyframes glow-pulse { to { box-shadow: none; } }
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-paper);
+}
+
+::selection {
+  background: rgba(191, 144, 57, 0.28);
+}
+
+/* Thin premium scrollbar */
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb { background: rgba(29, 47, 71, 0.22); border-radius: 8px; }
+*::-webkit-scrollbar-thumb:hover { background: rgba(191, 144, 57, 0.5); }
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* ── Serif display helper ── */
+.font-display { font-family: var(--font-display); letter-spacing: -0.01em; }
+
+/* ── Glass surfaces (kept for header, calmer) ── */
+.glass {
+  background: rgba(246, 244, 239, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.dark .glass { background: rgba(11, 20, 37, 0.82); }
+
+/* ── Gradient text → gold (subtle, serif ke saath) ── */
+.text-gradient {
+  background: linear-gradient(92deg, #cfa343 0%, #a5782e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── Card hover: hairline + gentle lift (no neon tint) ── */
+.card-hover {
+  transition:
+    transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.24s;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  border-color: rgba(191, 144, 57, 0.45);
+  box-shadow:
+    0 10px 28px -14px rgba(19, 31, 54, 0.25),
+    0 2px 8px -4px rgba(19, 31, 54, 0.08);
+}
+
+/* ── Button shine sweep (kept extremely subtle) ── */
+.btn-shine { position: relative; overflow: hidden; }
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -70%;
+  height: 100%; width: 40%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.55s ease;
+  pointer-events: none;
+}
+.btn-shine:hover::after { left: 140%; }
+
+/* ── Skeleton shimmer ── */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(93, 130, 176, 0.14);
+  border-radius: 0.75rem;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  animation: skeleton-sweep 1.5s infinite;
+}
+@keyframes skeleton-sweep { to { transform: translateX(100%); } }
+
+.glow-ring {
+  box-shadow: 0 0 0 1px rgba(191, 144, 57, 0.4), 0 6px 24px -8px rgba(191, 144, 57, 0.35);
+}
+
+/* ── Gold hairline rule (Oxford detail) ── */
+.gold-rule {
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-gold-500), transparent);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   🌙 Dark mode — neutral bridge: pages ke hardcoded slate utilities
+   dark navy surfaces par map ho jaate hain, 40 files chhue bina.
+   ───────────────────────────────────────────────────────────────── */
+.dark {
+  color-scheme: dark;
+}
+.dark body {
+  background-color: var(--color-ink-950);
+}
+.dark .bg-white { background-color: var(--color-ink-900); }
+.dark .bg-slate-50 { background-color: var(--color-ink-950); }
+.dark .bg-slate-100 { background-color: var(--color-ink-800); }
+.dark .bg-slate-200 { background-color: #1e3153; }
+.dark .bg-slate-50\/60 { background-color: rgba(19, 31, 54, 0.6); }
+.dark .bg-slate-50\/40 { background-color: rgba(19, 31, 54, 0.4); }
+.dark .text-slate-900 { color: #eef2f8; }
+.dark .text-slate-800 { color: #dde5ef; }
+.dark .text-slate-700 { color: #b8c5d8; }
+.dark .text-slate-600 { color: #93a5bd; }
+.dark .text-slate-500 { color: #7e92ab; }
+.dark .text-slate-400 { color: #5f7290; }
+.dark .text-slate-300 { color: #aab9cf; }
+.dark .border-slate-300 { border-color: rgba(147, 165, 189, 0.25); }
+.dark .border-slate-200 { border-color: rgba(147, 165, 189, 0.16); }
+.dark .border-slate-200\/80 { border-color: rgba(147, 165, 189, 0.16); }
+.dark .border-slate-100 { border-color: rgba(147, 165, 189, 0.1); }
+.dark .divide-slate-100 > * + * { border-color: rgba(147, 165, 189, 0.1); }
+.dark .placeholder\:text-slate-400::placeholder { color: #5f7290; }
+.dark .placeholder\:text-slate-500::placeholder { color: #5f7290; }
+.dark .stroke-slate-100 { stroke: rgba(147, 165, 189, 0.18); }
+.dark .shadow-sm { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); }
+.dark .shadow-lg { box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.5); }
+
+/* Accessibility: reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── ID Card printing ───────────────────────────────────── */
+.page-break {
+  page-break-before: always;
+  break-before: page;
+}
+
+@page { size: A4; margin: 10mm; }
+
+@media print {
+  .id-card {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  /* Print hamesha light mode me — dark theme se receipts/cards kharab na ho */
+  html.dark body { background: #fff; }
+}
