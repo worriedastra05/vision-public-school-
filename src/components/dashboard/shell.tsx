@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { GraduationCap, LogOut, Clock, Crown } from "lucide-react";
-import { NAV_ITEMS } from "./nav-items";
+import { NAV_ITEMS, findNavItem } from "./nav-items";
 import { cn } from "@/lib/utils";
 
 interface ShellProps {
@@ -41,6 +41,8 @@ export function DashboardShell({
   const pathname = usePathname();
   const items = NAV_ITEMS[role] ?? [];
   const BadgeIcon = roleBadgeIcons[roleBadgeVariant];
+  // Current page title nav se khud dhoondo, fallback = prop
+  const currentTitle = findNavItem(role, pathname)?.label ?? pageTitle;
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -138,7 +140,7 @@ export function DashboardShell({
               <GraduationCap className="h-5 w-5 text-white" />
             </div>
             <h1 className="text-lg font-bold tracking-tight text-slate-900 md:text-xl">
-              {pageTitle}
+              {currentTitle}
             </h1>
           </div>
           <div className="animate-fade-in flex items-center gap-3" style={{ animationDelay: "100ms" }}>

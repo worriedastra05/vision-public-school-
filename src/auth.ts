@@ -5,10 +5,10 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { authConfig } from "@/auth.config";
 import { db } from "@/lib/db";
-import { users } from "@/db/schema";
+import { students, users, type Role } from "@/db/schema";
 
 const credentialsSchema = z.object({
-  email: z.string().email(),
+  identifier: z.string().min(3),
   password: z.string().min(1),
 });
 
@@ -17,16 +17,34 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        email: { label: "Email", type: "email" },
+        identifier: { label: "Email ya Admission No", type: "text" },
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
         const parsed = credentialsSchema.safeParse(credentials);
         if (!parsed.success) return null;
 
-        const user = await db.query.users.findFirst({
-          where: eq(users.email, parsed.data.email.toLowerCase()),
-        });
+        const identifier = parsed.data.identifier.trim();
+
+        // ── Identifier EMAIL hai ya ADMISSION NUMBER? dono se login!
+        // Student: "VPS20260001"  |  Admin/Superadmin: email
+        let user:
+          | { id: string; name: string; email: string; password: string; role: Role; isActive: boolean }
+          | undefined;
+
+        if (identifier.includes("@")) {
+          user = await db.query.users.findFirst({
+            where: eq(users.email, identifier.toLowerCase()),
+          });
+        } else {
+          const student = await db.query.students.findFirst({
+            where: eq(students.admissionNo, identifier.toUpperCase()),
+          });
+          if (student) {
+            user = await db.query.users.findFirst({ where: eq(users.id, student.userId) });
+          }
+        }
+
         if (!user || !user.isActive) return null;
 
         const passwordValid = await bcrypt.compare(parsed.data.password, user.password);

@@ -31,7 +31,7 @@ function LoginForm() {
     setLoading(true);
 
     const res = await signIn("credentials", {
-      email: email.toLowerCase().trim(),
+      identifier: email.trim(),
       password,
       redirect: false,
     });
@@ -64,21 +64,24 @@ function LoginForm() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="animate-fade-up space-y-2" style={{ animationDelay: "250ms" }}>
             <Label htmlFor="email" className="text-slate-300">
-              Email
+              Email ya Admission Number
             </Label>
             <div className="relative">
               <Mail className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
               <Input
                 id="email"
-                type="email"
-                placeholder="you@visionpublicschool.edu"
+                type="text"
+                placeholder="email@school.edu  ya  VPS20260001"
                 className="border-white/10 bg-white/[0.06] pl-10 text-white placeholder:text-slate-500 focus:border-brand-400 focus:ring-brand-400/25"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                autoComplete="email"
+                autoComplete="username"
               />
             </div>
+            <p className="text-[11px] text-slate-500">
+              Students apna Admission Number (jaise VPS20260001) se bhi login kar sakte hain
+            </p>
           </div>
           <div className="animate-fade-up space-y-2" style={{ animationDelay: "320ms" }}>
             <Label htmlFor="password" className="text-slate-300">

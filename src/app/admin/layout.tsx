@@ -9,13 +9,15 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   if (!session) redirect("/login");
   if (session.user.role !== "ADMIN" && session.user.role !== "SUPERADMIN") redirect("/");
 
+  const isSuper = session.user.role === "SUPERADMIN";
+
   return (
     <DashboardShell
-      role="ADMIN"
+      role={isSuper ? "SUPERADMIN" : "ADMIN"}
       userName={session.user.name ?? "Admin"}
       userEmail={session.user.email ?? ""}
-      roleBadge={session.user.role === "SUPERADMIN" ? "Super Admin" : "Admin"}
-      roleBadgeVariant="success"
+      roleBadge={isSuper ? "Super Admin" : "Admin"}
+      roleBadgeVariant={isSuper ? "warning" : "success"}
       pageTitle="Admin Panel"
     >
       {children}
