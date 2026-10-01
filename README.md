@@ -28,16 +28,17 @@ npm run dev                                   # http://localhost:3000
 ## 🧱 Tech Stack
 **Next.js 16** • TypeScript • Tailwind CSS v4 • **Drizzle ORM** • PostgreSQL (local: PGlite embedded • prod: Neon) • Auth.js v5
 
-## 🌐 Production Deploy (Vercel + Supabase)
-1. **Supabase:** [supabase.com](https://supabase.com) → New project → database password save karo
-2. **Vercel:** [vercel.com](https://vercel.com) → GitHub se login → repo import → Deploy
-3. **4 env vars** set karo (Vercel Dashboard → Project → Settings → Environment Variables), values `.env` file ke commented section me ready hain:
-   - `DATABASE_URL` (Supabase **pooler**, port 6543)
-   - `DIRECT_URL` (Supabase **pooler**, port 5432 — build-time migrations ke liye)
-   - `AUTH_SECRET` (koi bhi 64-char random hex string)
-   - `AUTH_TRUST_HOST` = `true`
-4. Deploy → build khud `drizzle-kit migrate` chala ke tables bana dega (vercel.json me setup hai)
-5. Deploy hone ke baad **ek baar** ye link kholo (demo users ban jayenge):
+## 🌐 Production Deploy (Vercel + Supabase) — 5 minutes
+1. **Supabase:** [supabase.com](https://supabase.com) → New project → database password save karo (free tier kaafi hai)
+2. **Vercel:** [vercel.com](https://vercel.com) → GitHub se login → ye repo import → Deploy
+3. **3 env vars** set karo (Vercel Dashboard → Project → Settings → Environment Variables → har key: **Production + Preview dono** tick):
+   - `DATABASE_URL` — Supabase **Transaction pooler** URL (port **6543**). Shape: `.env.example` me ready-made hai
+   - `AUTH_SECRET` — 64-char random hex (`.env.example` me ek generated hai)
+   - `AUTH_TRUST_HOST` — `true` **(bina iske login kaam nahi karega)**
+4. Deploy hone ke baad **ek baar** ye link kholo (tables + demo users ban jayenge):
    `https://<aapki-app>.vercel.app/api/setup?secret=<AUTH_SECRET>`
+   → `{"ok": true, ...}` aaya to bas! Login: `superadmin@visionpublicschool.edu / Super@123`
+
+🛡️ Setup idempotent hai — galti se dobara kholo to kuch duplicate nahi hoga. Tables runtime migrations se banti hain (`drizzle/*.sql`), koi build-step/database-dashboard work NAHI chahiye.
 
 👉 **Poori deep research & roadmap:** [SCHOOL-MANAGEMENT-GUIDE.md](./SCHOOL-MANAGEMENT-GUIDE.md)
