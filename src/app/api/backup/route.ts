@@ -6,8 +6,8 @@ import { requireRole, logActivity } from "@/lib/guards";
 export const dynamic = "force-dynamic";
 
 /**
- * 📦 Full database backup — sirf SUPERADMIN.
- * Saare tables ka JSON dump download hota hai.
+ * 📦 Full database backup — SUPERADMIN only.
+ * Downloads a JSON dump of every table.
  */
 export async function GET() {
   const session = await requireRole("SUPERADMIN");
@@ -32,7 +32,7 @@ export async function GET() {
   void schema;
 
   const totalRows = Object.values(tables).reduce((s, t) => s + t.length, 0);
-  // Password hashes backup me hain — restore ke liye zaroori, par file ko SAFE rakhna!
+  // The backup contains password hashes — required for restores, so keep the file SAFE!
   const payload = {
     meta: {
       school: "Vision Public School",
@@ -40,12 +40,12 @@ export async function GET() {
       exportedBy: session.user.email,
       tableCount: Object.keys(tables).length,
       totalRows,
-      note: "CONFIDENTIAL — isme password hashes hain. File ko safe jagah rakho.",
+      note: "CONFIDENTIAL — contains password hashes. Store this file somewhere safe.",
     },
     tables,
   };
 
-  await logActivity(session.user.id, "backup.export", `Full backup download kiya (${totalRows} rows, ${Object.keys(tables).length} tables)`);
+  await logActivity(session.user.id, "backup.export", `Full backup downloaded (${totalRows} rows, ${Object.keys(tables).length} tables)`);
 
   const stamp = new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-");
   return new NextResponse(JSON.stringify(payload, null, 2), {

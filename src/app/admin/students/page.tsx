@@ -110,7 +110,7 @@ export default async function StudentsPage({
             <Input
               name="q"
               defaultValue={query}
-              placeholder="Naam ya Admission No. se search..."
+              placeholder="Search by name or Admission No..."
               className="pl-10"
             />
           </div>
@@ -199,7 +199,7 @@ export default async function StudentsPage({
             <div className="p-12 text-center">
               <GraduationCap className="mx-auto h-8 w-8 text-slate-300" />
               <p className="mt-3 text-sm text-slate-500">
-                {query ? `"${query}" ke liye koi student nahi mila` : "Abhi koi student nahi — pehla admission karein!"}
+                {query ? `No students found for "${query}"` : "No students yet — complete the first admission!"}
               </p>
             </div>
           )}
@@ -232,7 +232,7 @@ export default async function StudentsPage({
       </Reveal>
 
       <p className="flex items-center gap-2 text-xs text-slate-400">
-        <UserRound className="h-3.5 w-3.5" /> Har admission ke saath student ka login automatic ban jata hai
+        <UserRound className="h-3.5 w-3.5" /> Every admission automatically creates the student login
       </p>
     </div>
   );

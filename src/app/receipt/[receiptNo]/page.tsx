@@ -37,7 +37,7 @@ export default async function ReceiptPage({
   });
   if (!payment) notFound();
 
-  // Ownership: admin/superadmin sab dekh sakte; student SIRF apna
+  // Ownership: admin/superadmin see everything; students only their own
   if (session.user.role === "STUDENT") {
     if (payment.student.userId !== session.user.id) redirect("/student/fees");
   }
@@ -57,7 +57,7 @@ export default async function ReceiptPage({
       {/* New payment celebration */}
       {isNew && (
         <div className="mx-auto mb-4 flex max-w-2xl animate-fade-up items-center gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 print:hidden">
-          <BadgeCheck className="h-4.5 w-4.5" /> Payment record ho gaya! Receipt neeche ready hai — Print/PDF le sakte ho.
+          <BadgeCheck className="h-4.5 w-4.5" /> Payment recorded! Your receipt is ready below — you can Print/PDF it.
         </div>
       )}
 
@@ -171,7 +171,7 @@ export default async function ReceiptPage({
           {/* Footer */}
           <div className="flex items-end justify-between border-t border-dashed border-slate-200 px-8 py-5">
             <p className="max-w-56 text-[10px] leading-relaxed text-slate-400">
-              Computer generated receipt — signature required nahi. Queries ke liye school office se sampark karein.
+              This is a computer generated receipt — no signature required. For queries, contact the school office.
             </p>
             <div className="text-center">
               <div className="h-10 w-36 border-b border-slate-300" />

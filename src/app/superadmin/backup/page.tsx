@@ -44,7 +44,7 @@ export default async function BackupPage() {
           </div>
           <div>
             <h1 className="text-xl font-bold tracking-tight text-slate-900">Data Backup</h1>
-            <p className="text-sm text-slate-500">Poora database ek click me JSON file ke roop me download karo.</p>
+            <p className="text-sm text-slate-500">Download the entire database as a JSON file in one click.</p>
           </div>
         </div>
       </Reveal>
@@ -55,7 +55,7 @@ export default async function BackupPage() {
             <CardTitle className="flex items-center gap-2 text-base">
               <FileJson className="h-4.5 w-4.5 text-teal-600" /> Full Backup ({total} rows • {TABLES.length} tables)
             </CardTitle>
-            <CardDescription>Students, marks, fees, attendance, settings — sab kuch ek file me.</CardDescription>
+            <CardDescription>Students, marks, fees, attendance, settings — everything in one file.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-5 pt-5">
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -77,14 +77,14 @@ export default async function BackupPage() {
               <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-500" />
               <div className="text-sm leading-relaxed text-slate-600">
                 <p className="font-semibold text-slate-800">Security note</p>
-                Backup file me password hashes bhi hote hain (restore ke liye zaroori). File ko{" "}
-                <span className="font-medium">sirf apne paas, safe folder/drive</span> me rakho — kisi ko na bhejo.
+                The backup file contains password hashes (required for restores). Keep the file{" "}
+                <span className="font-medium">to yourself, in a safe folder/drive</span> — never share it with anyone.
               </div>
             </div>
 
             <div className="flex items-center gap-2 text-xs text-slate-400">
               <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-              Har download Activity Logs me record hota hai — kaun kab backup liya, pata rehta hai.
+              Every download is recorded in the Activity Logs — you always know who took a backup and when.
             </div>
           </CardContent>
         </Card>

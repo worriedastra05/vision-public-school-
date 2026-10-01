@@ -14,31 +14,31 @@ function errUrl(msg: string) {
   return "/admin/classes?err=" + encodeURIComponent(msg);
 }
 
-/** 🏫 Class banana (e.g. "Class 1" ... "Class 12") */
+/** Create a class (e.g. "Class 1" ... "Class 12") */
 export async function createClass(formData: FormData) {
   const session = await requireRole(...MANAGERS);
   const name = z.string().min(1).max(40).safeParse(formData.get("name"));
-  if (!name.success) redirect(errUrl("Class ka naam daalein"));
+  if (!name.success) redirect(errUrl("Please enter a class name"));
 
   const existing = await db.query.classes.findFirst({ where: eq(classes.name, name.data.trim()) });
-  if (existing) redirect(errUrl(`"${name.data}" pehle se maujood hai`));
+  if (existing) redirect(errUrl(`"${name.data}" already exists`));
 
   await db.insert(classes).values({ name: name.data.trim() });
   await logActivity(session.user.id, "CLASS_CREATED", name.data);
   revalidatePath("/admin/classes");
-  redirect("/admin/classes?ok=" + encodeURIComponent(`Class "${name.data}" ban gayi`));
+  redirect("/admin/classes?ok=" + encodeURIComponent(`Class "${name.data}" created`));
 }
 
 export async function addSection(formData: FormData) {
   const session = await requireRole(...MANAGERS);
   const classId = String(formData.get("classId") ?? "");
   const name = z.string().min(1).max(5).safeParse(formData.get("name"));
-  if (!classId || !name.success) redirect(errUrl("Section ka naam daalein"));
+  if (!classId || !name.success) redirect(errUrl("Please enter a section name"));
 
   const existing = await db.query.sections.findFirst({
     where: (s, { and, eq }) => and(eq(s.classId, classId), eq(s.name, name.data.trim().toUpperCase())),
   });
-  if (existing) redirect(errUrl(`Section "${name.data}" us class me pehle se hai`));
+  if (existing) redirect(errUrl(`Section "${name.data}" already exists in that class`));
 
   await db.insert(sections).values({ classId, name: name.data.trim().toUpperCase() });
   await logActivity(session.user.id, "SECTION_ADDED", `Section ${name.data}`);
@@ -50,12 +50,12 @@ export async function addSubject(formData: FormData) {
   const session = await requireRole(...MANAGERS);
   const classId = String(formData.get("classId") ?? "");
   const name = z.string().min(1).max(60).safeParse(formData.get("name"));
-  if (!classId || !name.success) redirect(errUrl("Subject ka naam daalein"));
+  if (!classId || !name.success) redirect(errUrl("Please enter a subject name"));
 
   const existing = await db.query.subjects.findFirst({
     where: (s, { and, eq }) => and(eq(s.classId, classId), eq(s.name, name.data.trim())),
   });
-  if (existing) redirect(errUrl(`Subject "${name.data}" us class me pehle se hai`));
+  if (existing) redirect(errUrl(`Subject "${name.data}" already exists in that class`));
 
   await db.insert(subjects).values({ classId, name: name.data.trim() });
   await logActivity(session.user.id, "SUBJECT_ADDED", name.data);
@@ -69,7 +69,7 @@ export async function deleteClass(formData: FormData) {
 
   const studentCount = await db.$count(students, eq(students.classId, classId));
   if (studentCount > 0) {
-    redirect(errUrl(`Is class me ${studentCount} students hain — pehle unhe shift karein, delete nahi hoga`));
+    redirect(errUrl(`This class has ${studentCount} students — move them to another class before deleting`));
   }
 
   await db.delete(classes).where(eq(classes.id, classId)); // sections/subjects cascade
@@ -82,7 +82,7 @@ export async function deleteSection(formData: FormData) {
   const session = await requireRole(...MANAGERS);
   const id = String(formData.get("id") ?? "");
   const studentCount = await db.$count(students, eq(students.sectionId, id));
-  if (studentCount > 0) redirect(errUrl(`Is section me ${studentCount} students hain — delete nahi hoga`));
+  if (studentCount > 0) redirect(errUrl(`This section has ${studentCount} students — it cannot be deleted`));
 
   await db.delete(sections).where(eq(sections.id, id));
   await logActivity(session.user.id, "SECTION_DELETED", id);

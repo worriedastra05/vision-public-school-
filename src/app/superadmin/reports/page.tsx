@@ -84,7 +84,7 @@ export default async function ReportsPage() {
           </div>
           <div>
             <h1 className="text-xl font-bold tracking-tight text-slate-900">System Reports</h1>
-            <p className="text-sm text-slate-500">Poore school ki health ek nazar me — live database se.</p>
+            <p className="text-sm text-slate-500">The whole school&apos;s health at a glance — straight from the live database.</p>
           </div>
         </div>
       </Reveal>
@@ -110,12 +110,12 @@ export default async function ReportsPage() {
               <CardTitle className="flex items-center gap-2 text-base">
                 <GraduationCap className="h-4.5 w-4.5 text-indigo-500" /> Students per Class
               </CardTitle>
-              <CardDescription>Har class me kitne bachche admission liye hue hain.</CardDescription>
+              <CardDescription>How many students are enrolled in each class.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {perClass.length === 0 && (
                 <p className="rounded-xl border border-dashed border-slate-200 p-6 text-center text-sm text-slate-400">
-                  Abhi koi student nahi.
+                  No students yet.
                 </p>
               )}
               {perClass.map((c) => (
@@ -148,7 +148,7 @@ export default async function ReportsPage() {
             <CardContent className="space-y-3">
               {feesByMonth.length === 0 && (
                 <p className="rounded-xl border border-dashed border-slate-200 p-6 text-center text-sm text-slate-400">
-                  Abhi koi payment nahi hui.
+                  No payments yet.
                 </p>
               )}
               {feesByMonth.map((m) => {
@@ -181,16 +181,16 @@ export default async function ReportsPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
-                <ClipboardCheck className="h-4.5 w-4.5 text-sky-500" /> Aaj ki Attendance
+                <ClipboardCheck className="h-4.5 w-4.5 text-sky-500" /> Today&apos;s Attendance
               </CardTitle>
               <CardDescription>
-                {attTotal === 0 ? "Aaj abhi mark nahi hui." : `${attTotal} students mark hue.`}
+                {attTotal === 0 ? "Not marked yet today." : `${attTotal} students marked.`}
               </CardDescription>
             </CardHeader>
             <CardContent>
               {attTotal === 0 ? (
                 <p className="rounded-xl border border-dashed border-slate-200 p-6 text-center text-sm text-slate-400">
-                  Admin Attendance section se roz mark karta hai.
+                  The admin marks attendance daily from the Attendance section.
                 </p>
               ) : (
                 <div className="flex items-center gap-6">
@@ -223,7 +223,7 @@ export default async function ReportsPage() {
               <CardTitle className="flex items-center gap-2 text-base">
                 <FileText className="h-4.5 w-4.5 text-amber-500" /> Exams & Results
               </CardTitle>
-              <CardDescription>Publish hokkar hi students ke report card me dikhte hain.</CardDescription>
+              <CardDescription>Results become visible on student report cards only after publishing.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/60 px-4 py-3">
@@ -231,7 +231,7 @@ export default async function ReportsPage() {
                 <span className="text-lg font-bold tabular-nums text-slate-900">{examCount}</span>
               </div>
               <div className="flex items-center justify-between rounded-xl border border-emerald-100 bg-emerald-50/60 px-4 py-3">
-                <span className="text-sm font-medium text-emerald-700">Published (students ko dikh rahe)</span>
+                <span className="text-sm font-medium text-emerald-700">Published (visible to students)</span>
                 <span className="text-lg font-bold tabular-nums text-emerald-700">{published}</span>
               </div>
               <div className="flex items-center justify-between rounded-xl border border-amber-100 bg-amber-50/60 px-4 py-3">

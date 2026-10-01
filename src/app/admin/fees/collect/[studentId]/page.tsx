@@ -58,7 +58,7 @@ export default async function CollectStudentPage({
           </Link>
           <div>
             <h2 className="text-xl font-bold tracking-tight text-slate-900">Collect Fees</h2>
-            <p className="text-sm text-slate-500">{student.class.name} ki structure ke basis par</p>
+            <p className="text-sm text-slate-500">Based on the fee structure of {student.class.name}</p>
           </div>
         </div>
       </Reveal>
@@ -107,7 +107,7 @@ export default async function CollectStudentPage({
             <CardTitle className="flex items-center gap-2 text-base">
               <Wallet className="h-5 w-5 text-emerald-600" /> Payment Details
             </CardTitle>
-            <CardDescription>Type tick karo, amount adjust karo, mode chuno — receipt turant banegi</CardDescription>
+            <CardDescription>Tick a type, adjust the amount, choose a mode — the receipt is generated instantly</CardDescription>
           </CardHeader>
           <CardContent>
             <CollectForm

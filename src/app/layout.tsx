@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     "Professional school management portal: report cards, ID cards, attendance, fees — role-based access for Super Admin, Admin and Students.",
 };
 
-/** Theme boot — first paint se pehle saved theme lagao (flash nahi aayega) */
+/** Theme boot — apply the saved theme before first paint (no flash) */
 const themeScript = `
 (function () {
   try {

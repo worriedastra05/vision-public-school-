@@ -36,7 +36,7 @@ export default async function AdminsPage({
           <div>
             <h1 className="text-xl font-bold tracking-tight text-slate-900">Admin Accounts</h1>
             <p className="text-sm text-slate-500">
-              School ke staff-admins yahan banao, access on/off karo, password reset karo.
+              Create the school&apos;s staff admins here, toggle their access, reset passwords.
             </p>
           </div>
         </div>
@@ -59,14 +59,14 @@ export default async function AdminsPage({
           <Card className="overflow-hidden">
             <CardHeader className="border-b bg-gradient-to-r from-rose-50 to-pink-50">
               <CardTitle className="flex items-center gap-2 text-base">
-                <UserPlus className="h-4.5 w-4.5 text-rose-600" /> Naya Admin Banao
+                <UserPlus className="h-4.5 w-4.5 text-rose-600" /> Create New Admin
               </CardTitle>
-              <CardDescription>Credentials admin ko personally dena — password dobara nahi dikhega.</CardDescription>
+              <CardDescription>Share the credentials with the admin personally — the password will not be shown again.</CardDescription>
             </CardHeader>
             <CardContent className="pt-5">
               <form action={createAdmin} className="space-y-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="name">Poora naam</Label>
+                  <Label htmlFor="name">Full name</Label>
                   <Input id="name" name="name" placeholder="e.g. Rakesh Kumar" required minLength={2} />
                 </div>
                 <div className="space-y-1.5">
@@ -76,10 +76,10 @@ export default async function AdminsPage({
                 <div className="space-y-1.5">
                   <Label htmlFor="password">Password</Label>
                   <Input id="password" name="password" type="text" placeholder="Min 8 characters" required minLength={8} />
-                  <p className="text-xs text-slate-400">Text rakha hai taki aap copy kar sakte — uske baad admin khud change kar le.</p>
+                  <p className="text-xs text-slate-400">Kept as plain text so you can copy it — the admin can change it afterwards.</p>
                 </div>
                 <Button type="submit" className="w-full">
-                  <UserPlus className="h-4 w-4" /> Admin Banayo
+                  <UserPlus className="h-4 w-4" /> Create Admin
                 </Button>
               </form>
             </CardContent>
@@ -91,12 +91,12 @@ export default async function AdminsPage({
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Active Admin Accounts ({admins.length})</CardTitle>
-              <CardDescription>Deactivate karte hi admin ka login turant band. Data safe rehta hai.</CardDescription>
+              <CardDescription>Deactivation blocks the admin login instantly. All data stays safe.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {admins.length === 0 && (
                 <p className="rounded-xl border border-dashed border-slate-200 p-6 text-center text-sm text-slate-400">
-                  Abhi koi admin nahi — left se pehla banayo.
+                  No admins yet — create the first one from the left.
                 </p>
               )}
               {admins.map((a) => (
@@ -131,7 +131,7 @@ export default async function AdminsPage({
                       <input type="hidden" name="adminId" value={a.id} />
                       <Input
                         name="newPassword"
-                        placeholder="Naya password"
+                        placeholder="New password"
                         required
                         minLength={8}
                         className="h-8 w-36 text-xs"

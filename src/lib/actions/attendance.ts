@@ -20,9 +20,9 @@ const payloadSchema = z.object({
   records: z.array(recordSchema).min(1),
 });
 
-/** Bulk attendance save — ek class+section+date ka poora sheet ek saath.
- *  Idempotent: us class/date ke purane records delete + fresh insert (transaction).
- *  Sirf usi class/section ke students accept hote hain (server-side verify). */
+/** Bulk attendance save — the full sheet for one class+section+date at once.
+ *  Idempotent: previous records for that class/date are replaced in one transaction.
+ *  Only students of that class/section are accepted (server-side verify). */
 export async function saveAttendance(formData: FormData) {
   const session = await requireRole("ADMIN", "SUPERADMIN");
 
@@ -50,11 +50,11 @@ export async function saveAttendance(formData: FormData) {
       }).toString()}`
     );
 
-  if (!parsed.success) return back('{"err":"Data sahi nahi hai"}');
+  if (!parsed.success) return back('{"err":"Invalid data"}');
 
   const { classId, sectionId, date, records } = parsed.data;
 
-  // ── Server-side VERIFY: records ke student sirf is class/section ke hain
+  // ── Server-side VERIFY: every record belongs to this class/section
   const roster = await db
     .select({ id: students.id })
     .from(students)
@@ -65,9 +65,9 @@ export async function saveAttendance(formData: FormData) {
     );
   const validIds = new Set(roster.map((r) => r.id));
   const clean = records.filter((r) => validIds.has(r.studentId));
-  if (clean.length === 0) return back('{"err":"Koi valid student nahi mila"}');
+  if (clean.length === 0) return back('{"err":"No valid students found"}');
 
-  // ── Idempotent save: purana delete + naya insert (ek transaction me)
+  // ── Idempotent save: delete old + insert new (single transaction)
   await db.transaction(async (tx) => {
     const ids = clean.map((r) => r.studentId);
     await tx

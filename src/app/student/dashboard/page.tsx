@@ -13,8 +13,8 @@ export default async function StudentDashboard() {
   const session = await auth();
   const userId = session!.user.id;
 
-  // Student sirf APNA data fetch karta hai — userId session se aata hai,
-  // koi bhi dusre ka data is query se nahi mil sakta
+  // A student only ever fetches THEIR OWN data — the userId comes from the
+  // session, so no one else's record can ever leak through this query
   const student = await db.query.students.findFirst({
     where: eq(students.userId, userId),
     with: { class: true, section: true, attendance: true },
@@ -34,7 +34,7 @@ export default async function StudentDashboard() {
   const presentDays = student?.attendance.filter((a) => a.status === "PRESENT").length ?? 0;
   const attendancePct = totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : null;
 
-  // Latest published result (student's class ke published exams me apne marks)
+  // Latest published result (own marks in published exams of the student's class)
   const latestExam = student
     ? await db.query.exams.findFirst({
         where: and(eq(exams.classId, student.classId), eq(exams.isPublished, true)),
@@ -43,7 +43,7 @@ export default async function StudentDashboard() {
       })
     : null;
 
-  let latestResult: { label: string; hint: string } = { label: "—", hint: "Koi result publish nahi hua" };
+  let latestResult: { label: string; hint: string } = { label: "—", hint: "No result published yet" };
   if (latestExam && latestExam.marks.length > 0) {
     const t = latestExam.marks.reduce((s, m) => s + Number(m.marksObtained), 0);
     const mx = latestExam.marks.reduce((s, m) => s + Number(m.maxMarks), 0);
@@ -86,7 +86,7 @@ export default async function StudentDashboard() {
             </div>
             <div className="min-w-0 flex-1">
               <h2 className="font-display text-xl font-bold tracking-tight text-white md:text-2xl">
-                Namaste, {session!.user.name}
+                Welcome back, {session!.user.name}
               </h2>
               <div className="gold-rule mt-2 w-16" />
               {student ? (
@@ -98,7 +98,7 @@ export default async function StudentDashboard() {
                 </p>
               ) : (
                 <p className="mt-2 text-sm text-slate-500">
-                  Aapka student profile abhi admin dwara link nahi hua hai.
+                  Your student profile has not been linked by the admin yet.
                 </p>
               )}
             </div>
@@ -141,11 +141,11 @@ export default async function StudentDashboard() {
         <Card className="card-hover">
           <CardHeader>
             <CardTitle>Latest Notices</CardTitle>
-            <CardDescription>School ki taaza announcements</CardDescription>
+            <CardDescription>The latest announcements from school</CardDescription>
           </CardHeader>
           <CardContent>
             {noticeRows.length === 0 ? (
-              <p className="text-sm text-slate-400">Abhi koi notice nahi hai.</p>
+              <p className="text-sm text-slate-400">No notices yet.</p>
             ) : (
               <div className="space-y-3">
                 {noticeRows.map((notice, i) => (

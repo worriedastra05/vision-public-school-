@@ -14,8 +14,8 @@ export interface IdCardStudent {
 }
 
 /**
- * CR80-style ID card — FRONT + BACK (QR sirf back par).
- * On-screen: 340×214px premium design. Print par actual card-size.
+ * CR80-style ID card — FRONT + BACK (QR on the back only).
+ * On-screen: 340×214px premium design. Prints at actual card size.
  */
 export function StudentIdCardFront({
   student,
@@ -126,7 +126,7 @@ export function StudentIdCardBack({
             </p>
             <p className="flex items-start gap-1.5">
               <MapPin className="mt-0.5 h-3 w-3 shrink-0 text-white/50" />
-              <span className="line-clamp-2">{student.address ?? "School records me dekhein"}</span>
+              <span className="line-clamp-2">{student.address ?? "See school records"}</span>
             </p>
             <p className="flex items-center gap-1.5">
               <CalendarDays className="h-3 w-3 shrink-0 text-white/50" /> Valid through: {validThrough}
@@ -134,7 +134,7 @@ export function StudentIdCardBack({
           </div>
 
           <p className="mt-auto rounded-md bg-white/10 px-2 py-1 text-[7px] leading-tight text-white/70 backdrop-blur">
-            Ye card school ki property hai — mile to school office me return karein. QR scan karke validity verify ki ja sakti hai.
+            This card is school property — if found, please return it to the school office. Scan the QR code to verify validity.
           </p>
         </div>
 

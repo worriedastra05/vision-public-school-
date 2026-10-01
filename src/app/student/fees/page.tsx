@@ -6,7 +6,7 @@ import { academicSessions, feePayments, feeStructures, students } from "@/db/sch
 import { requireUser } from "@/lib/guards";
 import { expectedForSession, inr, parseRemarks } from "@/lib/fees-calcs";
 import { Reveal } from "@/components/motion";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Wallet, IndianRupee, ReceiptText, TrendingUp, AlertTriangle, BadgeCheck, Info } from "lucide-react";
 
@@ -50,7 +50,7 @@ export default async function StudentFeesPage() {
       <Reveal>
         <div>
           <h2 className="text-xl font-bold tracking-tight text-slate-900">My Fees</h2>
-          <p className="text-sm text-slate-500">{student.class.name} ki fee structure ke basis par</p>
+          <p className="text-sm text-slate-500">Based on the fee structure of {student.class.name}</p>
         </div>
       </Reveal>
 
@@ -64,7 +64,7 @@ export default async function StudentFeesPage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-slate-400">
-                  {due > 0 ? "Aapki fees pending hai" : "Sab fees clear hai!"}
+                  {due > 0 ? "You have pending fees" : "All fees are clear!"}
                 </p>
                 <p className={`font-display text-2xl font-bold tracking-tight ${due > 0 ? "text-gold-400" : "text-emerald-400"}`}>
                   {due > 0 ? `${inr(due)} due` : "No dues"}
@@ -140,7 +140,7 @@ export default async function StudentFeesPage() {
             {payments.length === 0 && (
               <div className="p-10 text-center">
                 <ReceiptText className="mx-auto h-8 w-8 text-slate-300" />
-                <p className="mt-3 text-sm text-slate-500">Abhi koi payment nahi — school office me jama karo to yahan dikhegi</p>
+                <p className="mt-3 text-sm text-slate-500">No payments yet — pay at the school office and it will show up here</p>
               </div>
             )}
           </div>
@@ -150,8 +150,8 @@ export default async function StudentFeesPage() {
       <Reveal delay={220}>
         <p className="flex items-start gap-2 text-xs leading-relaxed text-slate-400">
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-          Fees sirf school office / counter par jama hoti hai — online payment feature future phase me aayega.
-          Receipt download karke apne paas rakh lein.
+          Fees are collected only at the school office / counter — online payments are planned for a future update.
+          Please download and keep your receipts safe.
         </p>
       </Reveal>
     </div>

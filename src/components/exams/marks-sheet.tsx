@@ -69,7 +69,7 @@ export function MarksSheet({
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-3">
         <label className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2">
-          <span className="text-xs font-semibold text-slate-500">Max Marks (har subject)</span>
+          <span className="text-xs font-semibold text-slate-500">Max Marks (every subject)</span>
           <input
             type="number"
             min={1}
@@ -157,7 +157,7 @@ export function MarksSheet({
 
       <div className="flex items-center justify-between gap-3">
         <p className="flex items-center gap-1.5 text-xs text-slate-400">
-          <UserRound className="h-3.5 w-3.5" /> Blank = absent/skip • red cell = max se zyada
+          <UserRound className="h-3.5 w-3.5" /> Blank = absent/skip • red cell = above max
         </p>
         {!locked && (
           <button

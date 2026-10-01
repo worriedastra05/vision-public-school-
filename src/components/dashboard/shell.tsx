@@ -18,7 +18,7 @@ interface ShellProps {
   children: React.ReactNode;
 }
 
-// Oxford calm: ek hi treatment, sirf crown superadmin ko
+// Oxford calm: one treatment for all roles, the crown is reserved for the super admin
 const roleBadgeStylesLight = {
   default: "border border-brand-200 bg-brand-50 text-brand-800",
   success: "border border-brand-200 bg-brand-50 text-brand-800",

@@ -41,7 +41,7 @@ export default async function NewAdmissionPage({
           </Link>
           <div>
             <h2 className="text-xl font-bold tracking-tight text-slate-900">New Student Admission</h2>
-            <p className="text-sm text-slate-500">Form submit hote hi student ka login automatic ban jayega</p>
+            <p className="text-sm text-slate-500">The student&apos;s login is created automatically on submit</p>
           </div>
         </div>
       </Reveal>
@@ -59,9 +59,9 @@ export default async function NewAdmissionPage({
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
             <GraduationCap className="mx-auto h-8 w-8 text-slate-300" />
             <p className="mt-3 text-sm text-slate-500">
-              Pehle koi class banao —{" "}
+              Create a class first —{" "}
               <Link href="/admin/classes" className="font-semibold text-brand-600 hover:underline">
-                Classes manage karein
+                Manage classes
               </Link>
             </p>
           </div>
@@ -76,7 +76,7 @@ export default async function NewAdmissionPage({
                 </div>
                 <div>
                   <CardTitle>Admission Form</CardTitle>
-                  <CardDescription>(* wale fields zaroori hain)</CardDescription>
+                  <CardDescription>(Fields marked * are required)</CardDescription>
                 </div>
               </div>
             </CardHeader>
@@ -87,7 +87,7 @@ export default async function NewAdmissionPage({
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2 sm:col-span-2">
-                    <Label htmlFor="name">Student ka Full Name *</Label>
+                    <Label htmlFor="name">Student&apos;s Full Name *</Label>
                     <Input id="name" name="name" placeholder="e.g. Aarav Kumar" required minLength={2} />
                   </div>
                   <div className="space-y-2">
@@ -162,10 +162,10 @@ export default async function NewAdmissionPage({
                 <div className="flex items-start gap-2.5 rounded-xl bg-slate-50 p-3.5 text-xs leading-relaxed text-slate-500">
                   <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand-500" />
                   <span>
-                    Submit karte hi system <strong>Admission Number</strong> (e.g. VPS20260042) aur{" "}
-                    <strong>temporary password</strong> generate karega — jo agle page par{" "}
-                    <strong>sirf ek baar</strong> dikhega. Wo details parent ko de dena.
-                    Student admission number ya email se login kar sakta hai.
+                    On submit the system generates an <strong>Admission Number</strong> (e.g. VPS20260042) and a{" "}
+                    <strong>temporary password</strong> — shown <strong>only once</strong> on the next page.{" "}
+                    Please share those details with the parent. Students can sign in with either their
+                    admission number or email.
                   </span>
                 </div>
 

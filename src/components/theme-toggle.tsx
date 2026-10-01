@@ -3,12 +3,17 @@
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
-/** 🌙☀️ Oxford theme toggle — localStorage me save, reload par bhi same rahe */
+/** 🌙☀️ Oxford theme toggle — saved to localStorage, survives reloads */
 export function ThemeToggle({ className = "" }: { className?: string }) {
   const [dark, setDark] = useState<boolean | null>(null);
 
+  // Deferred to the next frame: keeps the SSR/mount neutral icon (no hydration
+  // mismatch) and avoids a synchronous setState inside the effect body.
   useEffect(() => {
-    setDark(document.documentElement.classList.contains("dark"));
+    const frame = requestAnimationFrame(() => {
+      setDark(document.documentElement.classList.contains("dark"));
+    });
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   function toggle() {
@@ -18,11 +23,11 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
     try {
       localStorage.setItem("vps-theme", next ? "dark" : "light");
     } catch {
-      // private mode me ignore
+      // ignored in private mode
     }
   }
 
-  // SSR/mount se pehle neutral icon (hydration mismatch avoid)
+  // Neutral icon before SSR/mount (avoids hydration mismatch)
   return (
     <button
       onClick={toggle}

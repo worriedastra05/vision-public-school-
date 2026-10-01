@@ -65,7 +65,7 @@ export default async function ActivityLogsPage({
             </div>
             <div>
               <h1 className="text-xl font-bold tracking-tight text-slate-900">Activity Logs</h1>
-              <p className="text-sm text-slate-500">Kisne, kya, kab — poora audit trail (latest 200).</p>
+              <p className="text-sm text-slate-500">Who did what, and when — the complete audit trail (latest 200).</p>
             </div>
           </div>
           <form className="flex gap-2">
@@ -81,15 +81,15 @@ export default async function ActivityLogsPage({
         <Card>
           <CardHeader>
             <CardTitle className="text-base">
-              {query ? `"${query}" ke liye ${rows.length} results` : `${rows.length} recent entries`}
+              {query ? `${rows.length} results for "${query}"` : `${rows.length} recent entries`}
             </CardTitle>
-            <CardDescription>Har important kaam yahan likha jata hai — kabhi delete nahi hota.</CardDescription>
+            <CardDescription>Every important action is recorded here — it is never deleted.</CardDescription>
           </CardHeader>
           <CardContent>
             {rows.length === 0 ? (
               <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-slate-200 p-10 text-center text-sm text-slate-400">
                 <Inbox className="h-8 w-8 text-slate-300" />
-                {query ? "Is search me kuch nahi mila" : "Abhi tak koi activity nahi — kaam shuru hote hi yahan sab dikhega"}
+                {query ? "Nothing found for this search" : "No activity yet — everything will appear here once work begins"}
               </div>
             ) : (
               <div className="divide-y divide-slate-100">

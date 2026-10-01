@@ -41,7 +41,7 @@ export default async function FeeStructurePage({
           </Link>
           <div>
             <h2 className="text-xl font-bold tracking-tight text-slate-900">Fee Structure</h2>
-            <p className="text-sm text-slate-500">Har class ke fee types — collect par yahi options dikhenge</p>
+            <p className="text-sm text-slate-500">Fee types for every class — these appear on the collect screen</p>
           </div>
         </div>
       </Reveal>
@@ -54,7 +54,7 @@ export default async function FeeStructurePage({
             }`}
           >
             {err ? <XCircle className="h-4.5 w-4.5" /> : <CheckCircle2 className="h-4.5 w-4.5" />}
-            {err ?? (added ? `"${added}" add hua` : "Structure delete hua")}
+            {err ?? (added ? `"${added}" added` : "Structure deleted")}
           </div>
         </Reveal>
       )}
@@ -88,7 +88,7 @@ export default async function FeeStructurePage({
                         <form action={deleteFeeStructure} className="inline">
                           <input type="hidden" name="id" value={s.id} />
                           <ConfirmSubmit
-                            message={`"${s.type}" structure delete karein?`}
+                            message={`Delete the "${s.type}" structure?`}
                             className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
@@ -121,7 +121,7 @@ export default async function FeeStructurePage({
       {classRows.length === 0 && (
         <Reveal delay={100}>
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
-            Pehle classes banao (Classes page se)
+            Create classes first (from the Classes page)
           </div>
         </Reveal>
       )}

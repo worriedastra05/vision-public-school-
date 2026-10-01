@@ -5,7 +5,7 @@ import { DashboardShell } from "@/components/dashboard/shell";
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   const session = await auth();
 
-  // Defense-in-depth: ADMIN ya SUPERADMIN hi access kar sakta hai
+  // Defense-in-depth: only an ADMIN or SUPERADMIN can access this area
   if (!session) redirect("/login");
   if (session.user.role !== "ADMIN" && session.user.role !== "SUPERADMIN") redirect("/");
 

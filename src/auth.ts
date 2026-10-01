@@ -10,7 +10,7 @@ import { students, users, type Role } from "@/db/schema";
 const credentialsSchema = z
   .object({
     identifier: z.string().optional(),
-    email: z.string().optional(), // purane cached login page ke liye backward-compat
+    email: z.string().optional(), // backward-compat for an older cached login page
     password: z.string().min(1),
   })
   .refine((d) => (d.identifier ?? d.email ?? "").trim().length >= 3);
@@ -20,7 +20,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        identifier: { label: "Email ya Admission No", type: "text" },
+        identifier: { label: "Email or Admission No", type: "text" },
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
@@ -29,7 +29,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const identifier = (parsed.data.identifier ?? parsed.data.email ?? "").trim();
 
-        // ── Identifier EMAIL hai ya ADMISSION NUMBER? dono se login!
+        // ── Is the identifier an EMAIL or an ADMISSION NUMBER? Both work!
         // Student: "VPS20260001"  |  Admin/Superadmin: email
         let user:
           | { id: string; name: string; email: string; password: string; role: Role; isActive: boolean }
@@ -53,7 +53,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const passwordValid = await bcrypt.compare(parsed.data.password, user.password);
         if (!passwordValid) return null;
 
-        // Session me role jayega (jwt callback ke through)
+        // The role flows into the session (via the jwt callback)
         return {
           id: user.id,
           name: user.name,

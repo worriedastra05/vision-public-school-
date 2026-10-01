@@ -41,7 +41,7 @@ export default async function ClassesPage({
           <div>
             <h2 className="text-xl font-bold tracking-tight text-slate-900">Classes & Subjects</h2>
             <p className="text-sm text-slate-500">
-              {classRows.length} classes • sections aur subjects yahin manage hote hain
+              {classRows.length} classes • manage sections and subjects here
             </p>
           </div>
           {/* Add class inline form */}
@@ -86,7 +86,7 @@ export default async function ClassesPage({
                 <form action={deleteClass}>
                   <input type="hidden" name="classId" value={cls.id} />
                   <ConfirmSubmit
-                    message={`"${cls.name}" delete karna hai? Sections, subjects bhi delete honge.`}
+                    message={`Delete "${cls.name}"? Its sections and subjects will also be deleted.`}
                     className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -109,7 +109,7 @@ export default async function ClassesPage({
                         <form action={deleteSection} className="inline">
                           <input type="hidden" name="id" value={sec.id} />
                           <ConfirmSubmit
-                            message={`Section ${sec.name} delete karein?`}
+                            message={`Delete section ${sec.name}?`}
                             className="rounded-full p-0.5 text-brand-400 hover:bg-brand-100 hover:text-red-600"
                           >
                             <Trash2 className="h-3 w-3" />
@@ -142,7 +142,7 @@ export default async function ClassesPage({
                         <form action={deleteSubject} className="inline">
                           <input type="hidden" name="id" value={sub.id} />
                           <ConfirmSubmit
-                            message={`Subject "${sub.name}" delete karein?`}
+                            message={`Delete the subject "${sub.name}"?`}
                             className="rounded-full p-0.5 text-slate-400 hover:bg-slate-200 hover:text-red-600"
                           >
                             <Trash2 className="h-3 w-3" />
@@ -170,7 +170,7 @@ export default async function ClassesPage({
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
             <BookOpen className="mx-auto h-8 w-8 text-slate-300" />
             <p className="mt-3 text-sm text-slate-500">
-              Koi class nahi hai — upar se pehli class add karein (e.g. "Class 1")
+              No classes yet — add your first class above (e.g. &quot;Class 1&quot;)
             </p>
           </div>
         </Reveal>

@@ -9,13 +9,13 @@ import { SETTING_KEYS } from "@/lib/settings-keys";
 
 const field = z.string().trim().max(200).default("");
 
-/** School settings save — ID card / receipt / sab jagah auto-update */
+/** Save school settings — ID cards and receipts update automatically */
 export async function saveSettings(formData: FormData) {
   const session = await requireRole("SUPERADMIN");
 
   const schoolName = field.parse(formData.get("school_name") ?? "");
   if (schoolName.length < 3) {
-    redirect("/superadmin/settings?err=" + encodeURIComponent("School ka naam zaroori hai (min 3 letters)"));
+    redirect("/superadmin/settings?err=" + encodeURIComponent("School name is required (min 3 letters)"));
   }
 
   for (const [key] of SETTING_KEYS) {
@@ -26,6 +26,6 @@ export async function saveSettings(formData: FormData) {
       .onConflictDoUpdate({ target: settings.key, set: { value } });
   }
 
-  await logActivity(session.user.id, "settings.update", `School settings update ki (${SETTING_KEYS.length} fields)`);
-  redirect("/superadmin/settings?ok=" + encodeURIComponent("Settings save ho gaye — sab jagah live"));
+  await logActivity(session.user.id, "settings.update", `School settings updated (${SETTING_KEYS.length} fields)`);
+  redirect("/superadmin/settings?ok=" + encodeURIComponent("Settings saved — live across the portal"));
 }

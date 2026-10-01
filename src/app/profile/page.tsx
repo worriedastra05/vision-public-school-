@@ -2,9 +2,10 @@ import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { students } from "@/db/schema";
 import { requireUser } from "@/lib/guards";
-import { changePassword } from "@/lib/actions/account";
+import { changePassword, updateMyPhoto } from "@/lib/actions/account";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { Reveal } from "@/components/motion";
+import { PhotoPicker } from "@/components/forms/photo-picker";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,12 +14,13 @@ import {
   Mail,
   ShieldCheck,
   CalendarDays,
-  UserRound,
   KeyRound,
   GraduationCap,
   Crown,
   CheckCircle2,
   XCircle,
+  Camera,
+  Save,
 } from "lucide-react";
 
 const ROLE_META = {
@@ -29,21 +31,26 @@ const ROLE_META = {
 };
 
 const pwdMessages: Record<string, { ok: boolean; text: string }> = {
-  ok: { ok: true, text: "Password successfully change ho gaya!" },
-  wrong: { ok: false, text: "Current password galat hai." },
-  mismatch: { ok: false, text: "Naya password aur confirm password match nahi kar rahe." },
-  invalid: { ok: false, text: "Naya password kam se kam 8 characters ka hona chahiye." },
+  ok: { ok: true, text: "Password changed successfully!" },
+  wrong: { ok: false, text: "The current password is incorrect." },
+  mismatch: { ok: false, text: "The new password and confirmation do not match." },
+  invalid: { ok: false, text: "The new password must be at least 8 characters long." },
+};
+
+const photoMessages: Record<string, { ok: boolean; text: string }> = {
+  ok: { ok: true, text: "ID card photo updated — it is live on your ID card now." },
+  invalid: { ok: false, text: "Invalid photo — please choose a JPG/PNG image under 350KB." },
 };
 
 export default async function ProfilePage({
   searchParams,
 }: {
-  searchParams: Promise<{ pwd?: string }>;
+  searchParams: Promise<{ pwd?: string; photo?: string }>;
 }) {
   const session = await requireUser();
-  const { pwd } = await searchParams;
+  const { pwd, photo } = await searchParams;
 
-  // Student ho to uska academic profile bhi dikhao
+  // Students also get their academic profile
   const student =
     session.user.role === "STUDENT"
       ? await db.query.students.findFirst({
@@ -55,6 +62,8 @@ export default async function ProfilePage({
   const meta = ROLE_META[session.user.role] ?? ROLE_META.STUDENT;
   const RoleIcon = meta.icon;
   const pwdMsg = pwd ? pwdMessages[pwd] : null;
+  const photoMsg = photo ? photoMessages[photo] : null;
+  const banner = pwdMsg ?? photoMsg;
 
   return (
     <DashboardShell
@@ -66,17 +75,17 @@ export default async function ProfilePage({
       pageTitle="My Profile"
     >
       <div className="mx-auto max-w-3xl space-y-6">
-        {pwdMsg && (
+        {banner && (
           <Reveal>
             <div
               className={`flex items-center gap-2.5 rounded-xl border px-4 py-3 text-sm font-medium ${
-                pwdMsg.ok
+                banner.ok
                   ? "border-emerald-200 bg-emerald-50 text-emerald-700"
                   : "border-red-200 bg-red-50 text-red-700"
               }`}
             >
-              {pwdMsg.ok ? <CheckCircle2 className="h-4.5 w-4.5" /> : <XCircle className="h-4.5 w-4.5" />}
-              {pwdMsg.text}
+              {banner.ok ? <CheckCircle2 className="h-4.5 w-4.5" /> : <XCircle className="h-4.5 w-4.5" />}
+              {banner.text}
             </div>
           </Reveal>
         )}
@@ -117,7 +126,7 @@ export default async function ProfilePage({
                 <CardTitle className="flex items-center gap-2">
                   <GraduationCap className="h-5 w-5 text-brand-600" /> Academic Details
                 </CardTitle>
-                <CardDescription>School dwara assign ki gayi jaankari (edit karne ke liye office se milein)</CardDescription>
+                <CardDescription>Assigned by the school (contact the office to correct anything)</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -140,6 +149,32 @@ export default async function ProfilePage({
           </Reveal>
         )}
 
+        {/* Student self-service: ID card photo */}
+        {student && (
+          <Reveal delay={130}>
+            <Card className="card-hover">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Camera className="h-5 w-5 text-brand-600" /> My ID Card Photo
+                </CardTitle>
+                <CardDescription>
+                  This photo appears on your ID card — upload a clear passport-size picture
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form action={updateMyPhoto} className="grid gap-4">
+                  <PhotoPicker defaultPhoto={student.photo} />
+                  <div>
+                    <Button type="submit">
+                      <Save className="h-4 w-4" /> Save Photo
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </Reveal>
+        )}
+
         {/* Change password */}
         <Reveal delay={160}>
           <Card className="card-hover">
@@ -147,7 +182,7 @@ export default async function ProfilePage({
               <CardTitle className="flex items-center gap-2">
                 <KeyRound className="h-5 w-5 text-brand-600" /> Change Password
               </CardTitle>
-              <CardDescription>Security ke liye strong password rakhein (min 8 characters)</CardDescription>
+              <CardDescription>Use a strong password (min 8 characters) for security</CardDescription>
             </CardHeader>
             <CardContent>
               <form action={changePassword} className="grid max-w-md gap-4">
@@ -181,5 +216,4 @@ export default async function ProfilePage({
   );
 }
 
-// TS helper: user import consistency
 export const dynamic = "force-dynamic";

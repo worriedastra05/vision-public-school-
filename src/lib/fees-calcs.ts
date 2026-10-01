@@ -1,11 +1,11 @@
-/** Fees ke shared helpers — pure functions, server+client safe */
+/** Shared fee helpers — pure functions, server+client safe */
 
 export interface FeeItem {
   label: string;
   amount: number;
 }
 
-/** remarks field me itemized JSON (ek receipt = multiple fee types) */
+/** Itemized JSON inside the remarks field (one receipt = multiple fee types) */
 export function packRemarks(items: FeeItem[], note: string): string {
   return JSON.stringify({ items, note });
 }
@@ -15,14 +15,14 @@ export function parseRemarks(raw: string | null): { items: FeeItem[]; note: stri
     const p = JSON.parse(raw);
     if (Array.isArray(p.items)) return { items: p.items, note: p.note ?? "" };
   } catch {
-    // purana plain-text remark
+    // legacy plain-text remark
   }
   return { items: [], note: raw };
 }
 
-/** Session ke hisaab se expected fees.
+/** Expected fees for a session.
  *  ONE_TIME → amount x1 | TERM → amount x1 per session (approx) | MONTHLY → amount x months so far
- *  months: session start (ya admission date, jo baad me ho) se ab tak, session end tak capped. */
+ *  months: from session start (or the admission date, whichever is later) until now. */
 export function expectedForSession(
   structures: { type: string; amount: string; frequency: string }[],
   sessionStart: Date | null,
@@ -38,7 +38,7 @@ export function expectedForSession(
   return structures.reduce((sum, s) => {
     const amt = Number(s.amount) || 0;
     if (s.frequency === "MONTHLY") return sum + amt * months;
-    return sum + amt; // TERM / ONE_TIME — session me ek baar
+    return sum + amt; // TERM / ONE_TIME — once per session
   }, 0);
 }
 

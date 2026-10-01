@@ -13,7 +13,7 @@
 | Phase 2 — Layouts & dashboards polish | 🔜 Next |
 | Phases 3–9 | Pending |
 
-**Demo logins:** 👑 `superadmin@visionpublicschool.edu / Super@123` • 🛡️ `admin@visionpublicschool.edu / Admin@123` • 🎓 `student@visionpublicschool.edu / Student@123`
+**Demo logins:** 👑 `superadmin@visionpublicschool.com / Super@123` • 🛡️ `admin@visionpublicschool.com / Admin@123` • 🎓 `VPS20260001 / Student@123`
 
 **Local me chalane ke liye:** `npm install` → `npm run db:generate && npm run db:migrate && npm run db:seed` → `npm run dev` (database setup ke liye KUCH install karne ki zaroorat nahi — embedded Postgres apne-aap chalta hai)
 

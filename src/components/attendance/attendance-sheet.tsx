@@ -36,7 +36,7 @@ export function AttendanceSheet({
   sectionId: string;
   date: string;
 }) {
-  // Default: existing record, warna sab PRESENT
+  // Default: the existing record, otherwise everyone PRESENT
   const [marks, setMarks] = useState<Record<string, Status>>(() =>
     Object.fromEntries(roster.map((s) => [s.id, existing[s.id] ?? "PRESENT"]))
   );
@@ -83,7 +83,7 @@ export function AttendanceSheet({
         <span className="ml-auto flex items-center gap-2">
           {markedCount > 0 && (
             <span className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1.5 text-[11px] font-medium text-brand-700">
-              {markedCount} pehle se marked — save karne par update hoga
+              {markedCount} already marked — saving updates the sheet
             </span>
           )}
           <button
@@ -91,7 +91,7 @@ export function AttendanceSheet({
             onClick={allPresent}
             className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 transition-colors hover:bg-emerald-100"
           >
-            <CheckCheck className="h-3.5 w-3.5" /> Sabko Present
+            <CheckCheck className="h-3.5 w-3.5" /> All Present
           </button>
           <button
             type="button"

@@ -82,7 +82,7 @@ export default async function ExamResultsPage({ params }: { params: Promise<{ id
             </div>
           </div>
           <Badge variant={exam.isPublished ? "success" : "warning"} className="border-0 px-3 py-1">
-            {exam.isPublished ? "Published (students ko dikh raha)" : "Draft (students se hidden)"}
+            {exam.isPublished ? "Published (visible to students)" : "Draft (hidden from students)"}
           </Badge>
         </div>
       </Reveal>
@@ -109,7 +109,7 @@ export default async function ExamResultsPage({ params }: { params: Promise<{ id
         <Card className="card-hover overflow-hidden">
           <CardHeader>
             <CardTitle className="text-base">Marks Matrix (ranked)</CardTitle>
-            <CardDescription>{rows.length} students ke marks</CardDescription>
+            <CardDescription>Marks of {rows.length} students</CardDescription>
           </CardHeader>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -177,7 +177,7 @@ export default async function ExamResultsPage({ params }: { params: Promise<{ id
           </div>
           {rows.length === 0 && (
             <CardContent className="p-12 text-center">
-              <p className="text-sm text-slate-400">Koi marks nahi — pehle marks entry karo</p>
+              <p className="text-sm text-slate-400">No marks yet — enter marks first</p>
             </CardContent>
           )}
         </Card>

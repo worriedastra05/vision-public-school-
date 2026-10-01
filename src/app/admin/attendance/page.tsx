@@ -33,7 +33,7 @@ export default async function AttendancePage({
       })
     : [];
 
-  // Roster + existing marks (jab class selected ho)
+  // Roster + existing marks (when a class is selected)
   let roster: {
     id: string; name: string; rollNo: number | null; admissionNo: string; photo: string | null;
   }[] = [];
@@ -81,7 +81,7 @@ export default async function AttendancePage({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-xl font-bold tracking-tight text-slate-900">Attendance</h2>
-            <p className="text-sm text-slate-500">Class-wise daily attendance mark karo — dubara save karne par update hota hai</p>
+            <p className="text-sm text-slate-500">Mark daily class-wise attendance — saving again updates the existing sheet</p>
           </div>
         </div>
       </Reveal>
@@ -172,7 +172,7 @@ export default async function AttendancePage({
             <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
               <Users className="mx-auto h-8 w-8 text-slate-300" />
               <p className="mt-3 text-sm text-slate-500">
-                Is class/section me koi student nahi hai — pehle admission karein
+                No students in this class/section — please complete an admission first
               </p>
             </div>
           </Reveal>
@@ -182,7 +182,7 @@ export default async function AttendancePage({
         <Reveal delay={120}>
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
             <ClipboardCheck className="mx-auto h-8 w-8 text-slate-300" />
-            <p className="mt-3 text-sm text-slate-500">Class choose karo, phir "Load Roster" dabaao</p>
+            <p className="mt-3 text-sm text-slate-500">Choose a class, then press &quot;Load Roster&quot;</p>
           </div>
         </Reveal>
       )}

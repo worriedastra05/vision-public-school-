@@ -7,7 +7,7 @@ import { GraduationCap, ShieldCheck, ShieldX } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
-/** PUBLIC verify page — QR scan se yahin aata hai (login nahi chahiye) */
+/** PUBLIC verify page — QR scans land here (no login required) */
 export default async function VerifyPage({
   params,
 }: {
@@ -73,10 +73,10 @@ export default async function VerifyPage({
             />
 
             <p className="text-xs leading-relaxed text-slate-400">
-              Ye record <span className="font-semibold text-slate-300">{school.name}</span> ke
-              live database se hai. Valid through{" "}
+              This record comes straight from the live database of{" "}
+              <span className="font-semibold text-slate-300">{school.name}</span>. Valid through{" "}
               <span className="font-semibold text-slate-300">{validThrough(school.session)}</span>.
-              Mismatch mile to school office se contact karein.
+              If something does not match, please contact the school office.
             </p>
           </>
         ) : (
@@ -85,7 +85,7 @@ export default async function VerifyPage({
             <p className="font-display mt-3 text-lg font-bold text-red-300">Invalid Card</p>
             <p className="mt-1 text-sm text-slate-400">
               Admission No. <span className="font-mono">{decodeURIComponent(admissionNo)}</span>{" "}
-              humare records me nahi mila — ye card FARZI ho sakta hai.
+              was not found in our records — this card may be FAKE.
             </p>
           </div>
         )}
