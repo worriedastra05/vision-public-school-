@@ -39,7 +39,12 @@ function LoginForm() {
     setLoading(false);
 
     if (res?.error) {
-      setError("Email ya password galat hai. Dobara try karein.");
+      // MissingCSRF = browser ne cookie block ki (iframe/desktop-mode me hota hai)
+      setError(
+        String(res.error).includes("MissingCSRF")
+          ? "Browser ne cookies block kar di hain — preview ko naye tab me khol kar try karein."
+          : "Email ya password galat hai. Dobara try karein."
+      );
       return;
     }
 

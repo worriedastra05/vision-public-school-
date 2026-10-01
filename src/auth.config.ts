@@ -12,6 +12,25 @@ export const authConfig = {
   session: {
     strategy: "jwt",
   },
+  /**
+   * Preview iframe / embedded contexts me third-party cookies block hoti hain
+   * (SameSite=Lax POST par nahi jaati → MissingCSRF). SameSite=None + Secure
+   * iframe/Vercel dono jagah kaam karta hai (sab https hai).
+   */
+  cookies: {
+    sessionToken: {
+      name: "__Secure-authjs.session-token",
+      options: { httpOnly: true, sameSite: "none" as const, path: "/", secure: true },
+    },
+    callbackUrl: {
+      name: "__Secure-authjs.callback-url",
+      options: { sameSite: "none" as const, path: "/", secure: true },
+    },
+    csrfToken: {
+      name: "__Host-authjs.csrf-token",
+      options: { httpOnly: true, sameSite: "none" as const, path: "/", secure: true },
+    },
+  },
   callbacks: {
     jwt({ token, user }) {
       if (user) {
