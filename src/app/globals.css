@@ -183,3 +183,21 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ── ID Card printing ───────────────────────────────────── */
+.page-break {
+  page-break-before: always;
+  break-before: page;
+}
+
+@page {
+  size: A4;
+  margin: 10mm;
+}
+
+@media print {
+  .id-card {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
