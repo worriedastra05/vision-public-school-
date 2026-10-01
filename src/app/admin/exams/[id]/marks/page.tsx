@@ -82,7 +82,7 @@ export default async function MarksEntryPage({
             }`}
           >
             {err ? <XCircle className="h-4.5 w-4.5" /> : <CheckCircle2 className="h-4.5 w-4.5" />}
-            {err ?? `✅ ${saved} marks entries save ho gayi!`}
+            {err ?? `${saved} marks entries save ho gayi!`}
           </div>
         </Reveal>
       )}

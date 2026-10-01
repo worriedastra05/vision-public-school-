@@ -54,31 +54,24 @@ export default async function StudentFeesPage() {
         </div>
       </Reveal>
 
-      {/* Status banner */}
+      {/* Status banner — Oxford navy + gold */}
       <Reveal delay={60}>
-        <div
-          className={`relative overflow-hidden rounded-2xl p-5 text-white shadow-lg ${
-            due > 0
-              ? "bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 bg-[length:220%_auto] animate-gradient-x shadow-amber-500/25"
-              : "bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 bg-[length:220%_auto] animate-gradient-x shadow-emerald-600/25"
-          }`}
-        >
-          <div className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-ink-950 p-5 text-white shadow-[0_20px_50px_-24px_rgba(19,31,54,0.5)]">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3.5">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/15 backdrop-blur">
-                <Wallet className="h-6 w-6" />
+              <div className="glow-ring flex h-12 w-12 items-center justify-center rounded-full border border-gold-500/40 bg-ink-900">
+                <Wallet className="h-5.5 w-5.5 text-gold-400" />
               </div>
               <div>
-                <p className="text-sm font-medium text-white/85">
-                  {due > 0 ? "Aapki fees pending hai" : "Sab fees clear hai! 🎉"}
+                <p className="text-sm font-medium text-slate-400">
+                  {due > 0 ? "Aapki fees pending hai" : "Sab fees clear hai!"}
                 </p>
-                <p className="text-2xl font-bold tracking-tight">
+                <p className={`font-display text-2xl font-bold tracking-tight ${due > 0 ? "text-gold-400" : "text-emerald-400"}`}>
                   {due > 0 ? `${inr(due)} due` : "No dues"}
                 </p>
               </div>
             </div>
-            <p className="text-xs text-white/70">
+            <p className="text-xs text-slate-500">
               Session {activeSession?.name} • {payments.length} payment{payments.length !== 1 ? "s" : ""} made
             </p>
           </div>
@@ -88,14 +81,13 @@ export default async function StudentFeesPage() {
       <div className="grid gap-4 sm:grid-cols-3">
         {cards.map((c, i) => (
           <Reveal key={c.label} delay={100 + i * 70}>
-            <div className="card-hover relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm">
-              <div className={`absolute -right-6 -top-8 h-24 w-24 rounded-full bg-gradient-to-br opacity-[0.12] blur-xl ${c.grad}`} />
+            <div className="card-hover relative overflow-hidden rounded-xl border border-slate-200/90 bg-white p-5 shadow-[0_1px_2px_rgba(19,31,54,0.04)] dark:border-white/10 dark:bg-ink-900">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{c.label}</p>
-                  <p className="mt-1.5 font-mono text-2xl font-bold text-slate-900">{c.value}</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">{c.label}</p>
+                  <p className="mt-1.5 font-display text-2xl font-bold text-slate-900 dark:text-slate-100">{c.value}</p>
                 </div>
-                <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-lg ${c.grad}`}>
+                <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-800 text-gold-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
                   <c.icon className="h-5 w-5" />
                 </div>
               </div>

@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { GraduationCap, LogOut, Clock, Crown } from "lucide-react";
+import { GraduationCap, LogOut, Crown } from "lucide-react";
 import { NAV_ITEMS, findNavItem } from "./nav-items";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
 interface ShellProps {
@@ -17,16 +18,11 @@ interface ShellProps {
   children: React.ReactNode;
 }
 
-const roleBadgeStyles = {
-  default: "bg-gradient-to-r from-indigo-500 to-violet-600 text-white shadow-md shadow-indigo-500/30",
-  success: "bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/30",
-  warning: "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md shadow-amber-500/30",
-};
-
-const roleBadgeIcons = {
-  default: GraduationCap,
-  success: GraduationCap,
-  warning: Crown,
+// Oxford calm: ek hi treatment, sirf crown superadmin ko
+const roleBadgeStylesLight = {
+  default: "border border-brand-200 bg-brand-50 text-brand-800",
+  success: "border border-brand-200 bg-brand-50 text-brand-800",
+  warning: "border border-gold-300 bg-gold-50 text-gold-800",
 };
 
 export function DashboardShell({
@@ -40,43 +36,47 @@ export function DashboardShell({
 }: ShellProps) {
   const pathname = usePathname();
   const items = NAV_ITEMS[role] ?? [];
-  const BadgeIcon = roleBadgeIcons[roleBadgeVariant];
-  // Current page title nav se khud dhoondo, fallback = prop
   const currentTitle = findNavItem(role, pathname)?.label ?? pageTitle;
 
   return (
-    <div className="min-h-screen bg-slate-100">
-      {/* ── Sidebar (desktop) — midnight premium ── */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col bg-gradient-to-b from-midnight-800 via-midnight-900 to-midnight-950 text-slate-300 shadow-2xl shadow-midnight-950/50 md:flex">
-        {/* Logo */}
-        <div className="animate-fade-in flex items-center gap-3 border-b border-white/[0.07] px-5 py-5">
-          <div className="animate-glow-pulse flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-violet-600 shadow-lg shadow-brand-600/40">
-            <GraduationCap className="h-6 w-6 text-white" />
+    <div className="min-h-screen bg-paper dark:bg-ink-950">
+      {/* ── Sidebar — deep academic navy, hairline gold detail ── */}
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col bg-ink-950 text-slate-300 md:flex">
+        {/* School crest */}
+        <div className="border-b border-white/[0.07] px-5 pb-5 pt-6">
+          <div className="flex items-center gap-3">
+            <div className="glow-ring flex h-11 w-11 items-center justify-center rounded-full border border-gold-500/40 bg-ink-900">
+              <GraduationCap className="h-5.5 w-5.5 text-gold-400" />
+            </div>
+            <div className="leading-tight">
+              <p className="font-display text-[15px] font-bold tracking-tight text-white">
+                Vision Public School
+              </p>
+              <p className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.22em] text-gold-500/90">
+                Management Portal
+              </p>
+            </div>
           </div>
-          <div className="leading-tight">
-            <p className="text-sm font-bold tracking-tight text-white">Vision Public School</p>
-            <p className="text-[11px] font-medium text-brand-300/80">Management Portal</p>
-          </div>
+          <div className="gold-rule mt-5" />
         </div>
 
-        {/* Nav — staggered entrance */}
-        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+        {/* Nav */}
+        <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-4">
           {items.map((item, i) => {
             const active = pathname === item.href;
             if (item.soon) {
               return (
                 <div
                   key={item.label}
-                  className="animate-fade-up flex cursor-not-allowed items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-500/80 transition-colors"
-                  style={{ animationDelay: `${60 + i * 35}ms` }}
+                  className="flex cursor-not-allowed items-center justify-between rounded-md px-3 py-2 text-[13px] text-slate-600"
                   title="Coming in next phase"
                 >
                   <span className="flex items-center gap-3">
                     <item.icon className="h-4 w-4" />
                     {item.label}
                   </span>
-                  <span className="flex items-center gap-1 rounded-full bg-white/5 px-2 py-0.5 text-[10px] font-medium text-slate-500">
-                    <Clock className="h-3 w-3" /> Soon
+                  <span className="rounded border border-white/[0.07] px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-slate-600">
+                    Soon
                   </span>
                 </div>
               );
@@ -86,76 +86,76 @@ export function DashboardShell({
                 key={item.label}
                 href={item.href}
                 className={cn(
-                  "animate-fade-up group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                  "animate-fade-up group relative flex items-center gap-3 rounded-md px-3 py-2 text-[13px] font-medium transition-colors duration-150",
                   active
-                    ? "translate-x-1 bg-gradient-to-r from-brand-600 to-violet-600 text-white shadow-lg shadow-brand-600/35"
-                    : "text-slate-400 hover:translate-x-1 hover:bg-white/[0.07] hover:text-white"
+                    ? "bg-white/[0.06] text-white"
+                    : "text-slate-400 hover:bg-white/[0.04] hover:text-slate-100"
                 )}
-                style={{ animationDelay: `${60 + i * 35}ms` }}
+                style={{ animationDelay: `${40 + i * 25}ms` }}
               >
+                {active && (
+                  <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-gold-500" />
+                )}
                 <item.icon
                   className={cn(
-                    "h-4 w-4 transition-transform duration-200 group-hover:scale-110",
-                    active ? "text-white" : "text-slate-500 group-hover:text-brand-300"
+                    "h-4 w-4 transition-colors",
+                    active ? "text-gold-400" : "text-slate-500 group-hover:text-gold-300/80"
                   )}
                 />
                 {item.label}
-                {active && (
-                  <span className="ml-auto h-1.5 w-1.5 animate-pulse rounded-full bg-white/90" />
-                )}
               </Link>
             );
           })}
         </nav>
 
-        {/* User card + signout */}
-        <div className="animate-fade-in border-t border-white/[0.07] p-4" style={{ animationDelay: "120ms" }}>
-          <div className="mb-3 flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.05] p-3 backdrop-blur">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-violet-600 text-sm font-bold text-white shadow-md shadow-brand-600/30">
+        {/* User + signout */}
+        <div className="border-t border-white/[0.07] p-4">
+          <div className="mb-3 flex items-center gap-3 rounded-lg border border-white/[0.07] bg-white/[0.03] p-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold-500/40 bg-ink-800 text-sm font-bold text-gold-400">
               {userName.charAt(0).toUpperCase()}
             </div>
             <div className="min-w-0 flex-1 leading-tight">
-              <p className="truncate text-sm font-semibold text-white">{userName}</p>
-              <p className="truncate text-[11px] text-slate-400">{userEmail}</p>
+              <p className="truncate text-[13px] font-semibold text-white">{userName}</p>
+              <p className="truncate text-[11px] text-slate-500">{userEmail}</p>
             </div>
           </div>
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/[0.06] px-3 py-2 text-sm font-medium text-slate-300 transition-all duration-200 hover:border-red-500/30 hover:bg-red-500/15 hover:text-red-300"
+            className="flex w-full items-center justify-center gap-2 rounded-md border border-white/[0.08] px-3 py-2 text-[13px] font-medium text-slate-400 transition-colors duration-150 hover:border-red-400/30 hover:bg-red-500/10 hover:text-red-300"
           >
-            <LogOut className="h-4 w-4" /> Sign out
+            <LogOut className="h-3.5 w-3.5" /> Sign out
           </button>
         </div>
       </aside>
 
       {/* ── Main column ── */}
       <div className="flex min-h-screen flex-col md:ml-64">
-        {/* Premium gradient top line */}
-        <div className="h-[3px] bg-gradient-to-r from-brand-600 via-violet-500 to-fuchsia-500 bg-[length:200%_auto] animate-gradient-x" />
+        {/* Gold hairline — prestige detail */}
+        <div className="h-[2px] bg-gradient-to-r from-gold-600 via-gold-400 to-gold-600 opacity-80" />
 
-        {/* Glass header */}
-        <header className="glass sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-slate-200/80 px-4 py-3.5 md:px-6">
-          <div className="animate-fade-in flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-violet-600 shadow-md shadow-brand-600/30 md:hidden">
-              <GraduationCap className="h-5 w-5 text-white" />
+        <header className="glass sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-slate-200/70 px-4 py-3 md:px-6 dark:border-white/[0.07]">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full border border-gold-500/40 bg-ink-950 md:hidden">
+              <GraduationCap className="h-4.5 w-4.5 text-gold-400" />
             </div>
-            <h1 className="text-lg font-bold tracking-tight text-slate-900 md:text-xl">
+            <h1 className="font-display text-lg font-bold tracking-tight text-slate-900 md:text-xl dark:text-slate-100">
               {currentTitle}
             </h1>
           </div>
-          <div className="animate-fade-in flex items-center gap-3" style={{ animationDelay: "100ms" }}>
+          <div className="flex items-center gap-2.5">
+            <ThemeToggle />
             <span
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold",
-                roleBadgeStyles[roleBadgeVariant]
+                "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider",
+                roleBadgeStylesLight[roleBadgeVariant]
               )}
             >
-              <BadgeIcon className="h-3 w-3" />
+              {roleBadgeVariant === "warning" && <Crown className="h-3 w-3" />}
               {roleBadge}
             </span>
             <button
               onClick={() => signOut({ callbackUrl: "/login" })}
-              className="flex items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-red-50 hover:text-red-600 md:hidden"
+              className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-slate-500 transition-colors hover:bg-red-50 hover:text-red-600 md:hidden dark:hover:bg-red-400/10"
             >
               <LogOut className="h-3.5 w-3.5" /> Sign out
             </button>
@@ -163,12 +163,12 @@ export function DashboardShell({
         </header>
 
         {/* Mobile nav */}
-        <nav className="flex gap-2 overflow-x-auto border-b border-slate-200 bg-white px-4 py-2.5 md:hidden">
+        <nav className="flex gap-1.5 overflow-x-auto border-b border-slate-200/70 bg-white/60 px-4 py-2 md:hidden dark:border-white/[0.07] dark:bg-ink-900/60">
           {items.map((item) =>
             item.soon ? (
               <span
                 key={item.label}
-                className="flex whitespace-nowrap rounded-lg px-3 py-1.5 text-xs text-slate-400"
+                className="whitespace-nowrap rounded-md px-3 py-1.5 text-xs text-slate-400 dark:text-slate-500"
               >
                 {item.label}
               </span>
@@ -177,10 +177,10 @@ export function DashboardShell({
                 key={item.label}
                 href={item.href}
                 className={cn(
-                  "whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-medium transition-all",
+                  "whitespace-nowrap rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
                   pathname === item.href
-                    ? "bg-gradient-to-r from-brand-600 to-violet-600 text-white shadow-md shadow-brand-600/30"
-                    : "bg-slate-100 text-slate-600 hover:bg-brand-50 hover:text-brand-700"
+                    ? "bg-ink-950 text-gold-300"
+                    : "text-slate-600 hover:bg-brand-50 hover:text-brand-800 dark:text-slate-300 dark:hover:bg-white/5"
                 )}
               >
                 {item.label}
@@ -189,7 +189,7 @@ export function DashboardShell({
           )}
         </nav>
 
-        <main className="flex-1 p-4 md:p-6">
+        <main className="flex-1 p-4 md:p-6 lg:p-7">
           <div className="animate-fade-in">{children}</div>
         </main>
       </div>

@@ -33,15 +33,15 @@ export default async function SuperAdminDashboard() {
   return (
     <div className="space-y-6">
       <Reveal>
-        <div className="relative flex items-start gap-4 overflow-hidden rounded-2xl border border-amber-200/80 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 p-6 shadow-sm">
-          <div className="pointer-events-none absolute -right-10 -top-16 h-48 w-48 rounded-full bg-amber-300/20 blur-3xl" />
-          <div className="animate-float flex h-13 w-13 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 p-3 shadow-lg shadow-amber-500/30">
-            <Crown className="h-6 w-6 text-white" />
+        <div className="relative flex items-start gap-4 overflow-hidden rounded-2xl border border-white/10 bg-ink-950 p-6 shadow-[0_20px_50px_-24px_rgba(19,31,54,0.5)]">
+          <div className="glow-ring flex h-13 w-13 shrink-0 items-center justify-center rounded-full border border-gold-500/40 bg-ink-900">
+            <Crown className="h-6 w-6 text-gold-400" />
           </div>
           <div>
-            <h2 className="text-xl font-bold tracking-tight text-slate-900">Welcome back, Boss 👑</h2>
-            <p className="mt-0.5 text-sm leading-relaxed text-slate-600">
-              Aap <span className="font-semibold text-slate-800">{schoolName}</span> ke main control
+            <h2 className="font-display text-xl font-bold tracking-tight text-white">Welcome back, Super Admin</h2>
+            <div className="gold-rule mt-2 w-16" />
+            <p className="mt-2 text-sm leading-relaxed text-slate-400">
+              Aap <span className="font-semibold text-gold-300">{schoolName}</span> ke main control
               panel me hain. Yahan se admins, settings, backups aur poora system manage hota hai.
             </p>
           </div>

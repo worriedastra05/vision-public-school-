@@ -23,21 +23,31 @@ export default async function VerifyPage({
   const school = await getSchoolInfo();
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#070b16] px-4 py-10">
-      <div className="pointer-events-none absolute left-1/4 top-0 h-72 w-72 rounded-full bg-brand-600/25 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 right-1/4 h-72 w-72 rounded-full bg-violet-600/20 blur-3xl" />
-      <div className="pointer-events-none absolute inset-0 dot-grid opacity-30 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-ink-950 px-4 py-10">
+      {/* Oxford damask texture + gold hairlines */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.05]"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5l7 12-7 12-7-12zM30 31l7 12-7 12-7-12z' fill='none' stroke='%23ddbd68' stroke-width='0.8'/%3E%3C/svg%3E\")",
+          backgroundSize: "60px 60px",
+        }}
+      />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-gold-600 via-gold-400 to-gold-600" />
 
       <div className="relative z-10 flex w-full max-w-md flex-col items-center gap-5 text-center">
-        <div className="flex items-center gap-2.5 text-white">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-violet-600 shadow-lg shadow-brand-600/40">
-            <GraduationCap className="h-5 w-5" />
+        <div className="flex items-center gap-3 text-white">
+          <div className="glow-ring flex h-11 w-11 items-center justify-center rounded-full border border-gold-500/40 bg-ink-900">
+            <GraduationCap className="h-5 w-5 text-gold-400" />
           </div>
           <div className="text-left leading-tight">
-            <p className="text-sm font-bold">{school.name}</p>
-            <p className="text-[10px] tracking-widest text-slate-400">ID CARD VERIFICATION</p>
+            <p className="font-display text-[15px] font-bold">{school.name}</p>
+            <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-gold-500/90">
+              ID Card Verification
+            </p>
           </div>
         </div>
+        <div className="gold-rule w-24" />
 
         {student ? (
           <>
@@ -70,10 +80,10 @@ export default async function VerifyPage({
             </p>
           </>
         ) : (
-          <div className="w-full rounded-2xl border border-rose-400/30 bg-rose-500/10 p-8 backdrop-blur">
-            <ShieldX className="mx-auto h-10 w-10 text-rose-400" />
-            <p className="mt-3 text-lg font-bold text-rose-300">Invalid Card</p>
-            <p className="mt-1 text-sm text-rose-200/70">
+          <div className="w-full rounded-2xl border border-red-400/25 bg-ink-900 p-8">
+            <ShieldX className="mx-auto h-10 w-10 text-red-400" />
+            <p className="font-display mt-3 text-lg font-bold text-red-300">Invalid Card</p>
+            <p className="mt-1 text-sm text-slate-400">
               Admission No. <span className="font-mono">{decodeURIComponent(admissionNo)}</span>{" "}
               humare records me nahi mila — ye card FARZI ho sakta hai.
             </p>

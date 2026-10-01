@@ -71,7 +71,7 @@ export default async function ExamsPage({
       : deleted
         ? { ok: true, text: `Exam "${deleted}" delete ho gaya` }
         : pub
-          ? { ok: true, text: `🎉 "${pub}" PUBLISH ho gaya — students ko report card dikhega!` }
+          ? { ok: true, text: `"${pub}" PUBLISH ho gaya — students ko report card dikhega!` }
           : unpub
             ? { ok: true, text: `"${unpub}" unpublish ho gaya (students se hidden)` }
             : null;

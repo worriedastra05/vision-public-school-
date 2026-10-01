@@ -57,7 +57,7 @@ export default async function ReceiptPage({
       {/* New payment celebration */}
       {isNew && (
         <div className="mx-auto mb-4 flex max-w-2xl animate-fade-up items-center gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 print:hidden">
-          <BadgeCheck className="h-4.5 w-4.5" /> 🎉 Payment record ho gaya! Receipt neeche ready hai — Print/PDF le sakte ho.
+          <BadgeCheck className="h-4.5 w-4.5" /> Payment record ho gaya! Receipt neeche ready hai — Print/PDF le sakte ho.
         </div>
       )}
 

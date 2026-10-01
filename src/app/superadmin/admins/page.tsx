@@ -44,12 +44,12 @@ export default async function AdminsPage({
 
       {ok && (
         <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
-          ✅ {ok}
+          {ok}
         </div>
       )}
       {err && (
         <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">
-          ⚠️ {err}
+          {err}
         </div>
       )}
 

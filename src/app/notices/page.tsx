@@ -59,7 +59,7 @@ export default async function NoticesPage() {
       <div className="mx-auto max-w-3xl space-y-4">
         <Reveal>
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/30">
+            <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-800 text-gold-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
               <Megaphone className="h-5 w-5" />
             </div>
             <div>

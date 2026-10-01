@@ -9,13 +9,14 @@ import {
   Lock,
   Mail,
   IdCard,
-  ClipboardCheck,
   Wallet,
+  FileText,
   ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 function LoginForm() {
   const router = useRouter();
@@ -53,52 +54,50 @@ function LoginForm() {
   }
 
   return (
-    <div className="animate-fade-up w-full max-w-md" style={{ animationDelay: "150ms" }}>
-      {/* Glass card */}
-      <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-8 shadow-2xl shadow-black/40 backdrop-blur-2xl">
-        <div className="mb-6 flex items-center gap-3">
-          <div className="animate-glow-pulse flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-violet-600 shadow-lg shadow-brand-600/40">
-            <GraduationCap className="h-6 w-6 text-white" />
+    <div className="animate-fade-up w-full max-w-md" style={{ animationDelay: "120ms" }}>
+      <div className="rounded-2xl border border-slate-200/90 bg-white p-8 shadow-[0_20px_50px_-20px_rgba(19,31,54,0.15)] dark:border-white/10 dark:bg-ink-900">
+        <div className="mb-7">
+          <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-full border border-gold-500/40 bg-ink-950 lg:hidden">
+            <GraduationCap className="h-5 w-5 text-gold-400" />
           </div>
-          <div>
-            <h2 className="text-xl font-bold tracking-tight text-white">Portal Login</h2>
-            <p className="text-xs text-slate-400">Apna email aur password daal kar login karein</p>
-          </div>
+          <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            Portal Login
+          </h2>
+          <div className="gold-rule mt-3 w-16" />
+          <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
+            Apna email aur password daal kar login karein
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="animate-fade-up space-y-2" style={{ animationDelay: "250ms" }}>
-            <Label htmlFor="email" className="text-slate-300">
-              Email ya Admission Number
-            </Label>
+          <div className="space-y-2">
+            <Label htmlFor="email">Email ya Admission Number</Label>
             <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+              <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <Input
                 id="email"
                 type="text"
                 placeholder="email@school.edu  ya  VPS20260001"
-                className="border-white/10 bg-white/[0.06] pl-10 text-white placeholder:text-slate-500 focus:border-brand-400 focus:ring-brand-400/25"
+                className="pl-10"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="username"
               />
             </div>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-[11px] text-slate-400 dark:text-slate-500">
               Students apna Admission Number (jaise VPS20260001) se bhi login kar sakte hain
             </p>
           </div>
-          <div className="animate-fade-up space-y-2" style={{ animationDelay: "320ms" }}>
-            <Label htmlFor="password" className="text-slate-300">
-              Password
-            </Label>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+              <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <Input
                 id="password"
                 type="password"
                 placeholder="••••••••"
-                className="border-white/10 bg-white/[0.06] pl-10 text-white placeholder:text-slate-500 focus:border-brand-400 focus:ring-brand-400/25"
+                className="pl-10"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -108,32 +107,32 @@ function LoginForm() {
           </div>
 
           {error && (
-            <p className="animate-shake rounded-lg border border-red-500/25 bg-red-500/10 px-3.5 py-2.5 text-sm font-medium text-red-300">
+            <p className="animate-shake rounded-lg border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm font-medium text-red-700 dark:border-red-400/25 dark:bg-red-400/10 dark:text-red-300">
               {error}
             </p>
           )}
 
-          <div className="animate-fade-up" style={{ animationDelay: "390ms" }}>
-            <Button type="submit" className="w-full" size="lg" disabled={loading}>
-              {loading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" /> Logging in...
-                </>
-              ) : (
-                "Login to Portal"
-              )}
-            </Button>
-          </div>
+          <Button type="submit" variant="gold" className="w-full" size="lg" disabled={loading}>
+            {loading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" /> Logging in...
+              </>
+            ) : (
+              "Login to Portal"
+            )}
+          </Button>
         </form>
 
         {/* Dev demo credentials — PRODUCTION me hata dena */}
-        <div className="animate-fade-up mt-6 rounded-xl border border-dashed border-white/15 bg-white/[0.04] p-3.5 text-xs leading-relaxed text-slate-400" style={{ animationDelay: "460ms" }}>
-          <p className="mb-1.5 flex items-center gap-1.5 font-semibold text-slate-300">
-            <ShieldCheck className="h-3.5 w-3.5 text-brand-400" /> Demo logins (Phase 1 testing):
+        <div className="mt-7 rounded-xl border border-dashed border-slate-200 bg-slate-50/80 p-4 text-xs leading-relaxed text-slate-500 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-400">
+          <p className="mb-2 flex items-center gap-1.5 font-semibold text-slate-600 dark:text-slate-300">
+            <ShieldCheck className="h-3.5 w-3.5 text-gold-600" /> Demo logins:
           </p>
-          <p>👑 superadmin@visionpublicschool.edu / Super@123</p>
-          <p>🛡️ admin@visionpublicschool.edu / Admin@123</p>
-          <p>🎓 student@visionpublicschool.edu / Student@123</p>
+          <div className="space-y-1 font-mono text-[11px]">
+            <p><span className="text-gold-700 dark:text-gold-400">SUPER</span> superadmin@visionpublicschool.edu / Super@123</p>
+            <p><span className="text-brand-700 dark:text-brand-300">ADMIN</span> admin@visionpublicschool.edu / Admin@123</p>
+            <p><span className="text-emerald-700 dark:text-emerald-400">STUDENT</span> student@visionpublicschool.edu / Student@123</p>
+          </div>
         </div>
       </div>
     </div>
@@ -141,74 +140,79 @@ function LoginForm() {
 }
 
 const features = [
-  { icon: ClipboardCheck, text: "Attendance & report cards — digital aur printable" },
+  { icon: FileText, text: "Report cards — digital, printable, ek click publish" },
   { icon: IdCard, text: "QR code ke saath smart student ID cards" },
-  { icon: Wallet, text: "Fee tracking, receipts aur due reminders" },
+  { icon: Wallet, text: "Fee tracking, receipts aur dues — sab transparent" },
 ];
 
 export default function LoginPage() {
   return (
-    <div className="relative flex min-h-screen overflow-hidden bg-midnight-950">
-      {/* ── Animated background: floating orbs + mesh glow ── */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="animate-float absolute -left-32 -top-32 h-[480px] w-[480px] rounded-full bg-brand-600/25 blur-[130px]" />
-        <div className="animate-float-slow absolute -bottom-40 right-[-10%] h-[520px] w-[520px] rounded-full bg-violet-600/20 blur-[140px]" style={{ animationDelay: "1.5s" }} />
-        <div className="animate-float absolute left-[45%] top-[30%] h-[300px] w-[300px] rounded-full bg-fuchsia-500/[0.13] blur-[110px]" style={{ animationDelay: "3s" }} />
-        {/* subtle dot grid texture */}
-        <div
-          className="absolute inset-0 opacity-[0.15]"
-          style={{
-            backgroundImage: "radial-gradient(rgba(165,180,252,0.4) 1px, transparent 1px)",
-            backgroundSize: "34px 34px",
-          }}
-        />
+    <div className="relative flex min-h-screen bg-paper dark:bg-ink-950">
+      <div className="absolute right-4 top-4 z-20 lg:right-6 lg:top-6">
+        <ThemeToggle />
       </div>
 
-      {/* ── Left branding panel ── */}
-      <div className="relative z-10 hidden w-1/2 flex-col justify-between p-12 text-white lg:flex">
-        <div className="animate-fade-up flex items-center gap-3">
-          <div className="glow-ring flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-violet-600">
-            <GraduationCap className="h-7 w-7" />
+      {/* ── Left panel — academic navy, serif branding ── */}
+      <div className="relative hidden w-[46%] flex-col justify-between overflow-hidden bg-ink-950 p-12 text-white lg:flex">
+        {/* subtle damask texture */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5l7 12-7 12-7-12zM30 31l7 12-7 12-7-12z' fill='none' stroke='%23ddbd68' stroke-width='0.8'/%3E%3C/svg%3E\")",
+            backgroundSize: "60px 60px",
+          }}
+        />
+        <div className="relative z-10">
+          <div className="animate-fade-up flex items-center gap-4">
+            <div className="glow-ring flex h-13 w-13 items-center justify-center rounded-full border border-gold-500/40 bg-ink-900">
+              <GraduationCap className="h-6.5 w-6.5 text-gold-400" />
+            </div>
+            <div>
+              <p className="font-display text-xl font-bold leading-tight tracking-tight">
+                Vision Public School
+              </p>
+              <p className="font-display text-xs italic text-gold-400/90">
+                Education • Discipline • Excellence
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-lg font-bold leading-tight tracking-tight">Vision Public School</p>
-            <p className="text-xs font-medium text-brand-300/90">Education • Discipline • Excellence</p>
-          </div>
+          <div className="gold-rule mt-8 w-24" />
         </div>
 
-        <div className="space-y-7">
-          <h1 className="animate-fade-up text-5xl font-bold leading-[1.12] tracking-tight" style={{ animationDelay: "120ms" }}>
-            School Management
+        <div className="relative z-10 space-y-7">
+          <h1 className="animate-fade-up font-display text-[42px] font-bold leading-[1.15] tracking-tight" style={{ animationDelay: "110ms" }}>
+            Shiksha ka
             <br />
-            <span className="text-gradient">Made Simple.</span>
+            digital <span className="text-gradient italic">shatabdi.</span>
           </h1>
-          <p className="animate-fade-up max-w-md text-[15px] leading-relaxed text-slate-400" style={{ animationDelay: "220ms" }}>
-            Report cards, ID cards, attendance, fees — sab kuch ek secure premium portal par.
-            Har role ko sirf wahi dikhta hai jo use dekhna chahiye.
+          <p className="animate-fade-up max-w-md font-display text-[15px] italic leading-relaxed text-slate-300/90" style={{ animationDelay: "200ms" }}>
+            "Padhai, parampara aur pragati — ab ek portal me."
           </p>
-          <div className="space-y-3.5">
+          <div className="space-y-3">
             {features.map(({ icon: Icon, text }, i) => (
               <div
                 key={text}
-                className="animate-fade-up flex items-center gap-3.5 rounded-xl border border-white/[0.07] bg-white/[0.04] p-3 backdrop-blur transition-colors duration-300 hover:border-brand-500/30 hover:bg-white/[0.07]"
-                style={{ animationDelay: `${320 + i * 110}ms` }}
+                className="animate-fade-up flex items-center gap-3.5 border-l-[3px] border-gold-500/50 py-1 pl-4"
+                style={{ animationDelay: `${300 + i * 100}ms` }}
               >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500/25 to-violet-500/25 text-brand-300">
-                  <Icon className="h-4.5 w-4.5" />
-                </div>
+                <Icon className="h-4 w-4 shrink-0 text-gold-400" />
                 <span className="text-sm text-slate-300">{text}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <p className="animate-fade-in text-xs text-slate-500" style={{ animationDelay: "800ms" }}>
-          © 2026 Vision Public School. All rights reserved.
-        </p>
+        <div className="relative z-10 flex items-center justify-between">
+          <p className="text-[11px] tracking-wide text-slate-500">
+            © 2026 Vision Public School
+          </p>
+          <p className="font-display text-[11px] italic text-gold-500/80">Est. Excellence</p>
+        </div>
       </div>
 
-      {/* ── Right form panel ── */}
-      <div className="relative z-10 flex w-full items-center justify-center p-6 lg:w-1/2">
+      {/* ── Right form panel — ivory ── */}
+      <div className="relative z-10 flex w-full items-center justify-center p-6 lg:w-[54%]">
         <Suspense fallback={null}>
           <LoginForm />
         </Suspense>

@@ -108,11 +108,11 @@ export default async function AdminDashboard() {
               <div className="space-y-2.5">
                 {[
                   { name: "Phase 7 — QR ID cards", done: false },
-                  { name: "Phase 6 — Fees & receipts ✅", done: true },
-                  { name: "Phase 5 — Exams, marks & report cards ✅", done: true },
-                  { name: "Phase 4 — Attendance ✅", done: true },
-                  { name: "Phase 3 — Students, teachers, classes ✅", done: true },
-                  { name: "Phase 1-2 — Auth, RBAC, premium UI ✅", done: true },
+                  { name: "Phase 6 — Fees & receipts", done: true },
+                  { name: "Phase 5 — Exams, marks & report cards", done: true },
+                  { name: "Phase 4 — Attendance", done: true },
+                  { name: "Phase 3 — Students, teachers, classes", done: true },
+                  { name: "Phase 1-2 — Auth, RBAC, Oxford premium UI", done: true },
                 ].map((m) => (
                   <div
                     key={m.name}

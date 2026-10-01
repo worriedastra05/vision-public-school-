@@ -29,7 +29,7 @@ const ROLE_META = {
 };
 
 const pwdMessages: Record<string, { ok: boolean; text: string }> = {
-  ok: { ok: true, text: "Password successfully change ho gaya! 🎉" },
+  ok: { ok: true, text: "Password successfully change ho gaya!" },
   wrong: { ok: false, text: "Current password galat hai." },
   mismatch: { ok: false, text: "Naya password aur confirm password match nahi kar rahe." },
   invalid: { ok: false, text: "Naya password kam se kam 8 characters ka hona chahiye." },

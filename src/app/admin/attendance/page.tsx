@@ -94,7 +94,7 @@ export default async function AttendancePage({
             }`}
           >
             <CheckCircle2 className="h-4.5 w-4.5" />
-            {err ? err : `✅ Attendance saved — ${saved} students marked!`}
+            {err ? err : `Attendance saved — ${saved} students marked!`}
           </div>
         </Reveal>
       )}

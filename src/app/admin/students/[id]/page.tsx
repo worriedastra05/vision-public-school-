@@ -90,10 +90,10 @@ export default async function StudentDetailPage({
               </div>
               <div className="flex-1">
                 <h3 className="font-bold text-slate-900">
-                  {isNew ? "🎉 Admission ho gaya!" : "🔑 Password reset ho gaya!"} Login Details
+                  {isNew ? "Admission ho gaya!" : "🔑 Password reset ho gaya!"} Login Details
                 </h3>
                 <p className="mt-0.5 text-xs text-amber-700">
-                  ⚠️ Ye details <strong>sirf abhi</strong> dikh rahi hain — abhi note kar lein aur parent ko de dein.
+                  Ye details <strong>sirf abhi</strong> dikh rahi hain — abhi note kar lein aur parent ko de dein.
                 </p>
                 <div className="mt-3 grid gap-2.5 sm:grid-cols-3">
                   <div className="rounded-lg bg-white/70 p-3">
