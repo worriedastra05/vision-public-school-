@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
-import { classes, notices, students, subjects, teachers } from "@/db/schema";
+import { and, eq } from "drizzle-orm";
+import { attendance, classes, notices, students, subjects, teachers } from "@/db/schema";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { Reveal } from "@/components/motion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -14,7 +15,9 @@ import {
 } from "lucide-react";
 
 export default async function AdminDashboard() {
-  const [studentCount, teacherCount, classCount, noticeCount, subjectCount, classList] =
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
+
+  const [studentCount, teacherCount, classCount, noticeCount, subjectCount, classList, markedToday, presentToday] =
     await Promise.all([
       db.$count(students),
       db.$count(teachers),
@@ -28,6 +31,8 @@ export default async function AdminDashboard() {
         },
         orderBy: (c, { asc }) => [asc(c.name)],
       }),
+      db.$count(attendance, eq(attendance.date, today)),
+      db.$count(attendance, and(eq(attendance.date, today), eq(attendance.status, "PRESENT"))),
     ]);
 
   return (
@@ -43,7 +48,14 @@ export default async function AdminDashboard() {
         <StatCard label="Total Students" value={studentCount} icon={GraduationCap} accent="indigo" delay={100} />
         <StatCard label="Total Teachers" value={teacherCount} icon={Users} accent="sky" delay={180} />
         <StatCard label="Classes" value={classCount} icon={BookOpen} accent="amber" delay={260} />
-        <StatCard label="Subjects" value={subjectCount} icon={ClipboardCheck} accent="emerald" delay={340} />
+        <StatCard
+          label="Present Today"
+          value={presentToday}
+          icon={ClipboardCheck}
+          accent="emerald"
+          hint={markedToday > 0 ? `${markedToday} marked • ${subjectCount} subjects` : "Attendance abhi mark nahi hui"}
+          delay={340}
+        />
         <StatCard label="Notices Posted" value={noticeCount} icon={Bell} accent="rose" delay={420} />
         <StatCard label="Fee Collection" value="Phase 6" icon={Wallet} accent="sky" hint="Coming soon" delay={500} />
       </div>
@@ -86,11 +98,12 @@ export default async function AdminDashboard() {
             <CardContent>
               <div className="space-y-2.5">
                 {[
-                  { name: "Phase 3 — Students, teachers & classes management", done: false },
-                  { name: "Phase 4 — Exams, marks entry & report cards", done: false },
-                  { name: "Phase 5 — QR-based ID card generator", done: false },
-                  { name: "Phase 6 — Fees, receipts & due list", done: false },
-                  { name: "Phase 1 — Auth, RBAC & dashboards ✅", done: true },
+                  { name: "Phase 5 — Exams, marks & report cards", done: false },
+                  { name: "Phase 6 — Fees & receipts", done: false },
+                  { name: "Phase 7 — QR ID cards", done: false },
+                  { name: "Phase 4 — Attendance ✅", done: true },
+                  { name: "Phase 3 — Students, teachers, classes ✅", done: true },
+                  { name: "Phase 1-2 — Auth, RBAC, premium UI ✅", done: true },
                 ].map((m) => (
                   <div
                     key={m.name}
