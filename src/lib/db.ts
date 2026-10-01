@@ -13,13 +13,13 @@ export type DB = PostgresJsDatabase<typeof schema>;
  *  - Local dev (no setup):      DATABASE_URL nahi hai → PGlite (embedded Postgres,
  *                               data ./.pglite folder me persist hota hai)
  *
- * Production me aapko SIRF ek env var (DATABASE_URL = Neon ka connection string)
- * set karni hai — code me koi change nahi!
+ * IMPORTANT — LAZY singleton: connection SIRF pehli query par banta hai.
+ * Agar module import par banaya to `next build` bhi PGlite open kar leta
+ * (route modules import hote hain) → do processes, corrupt data dir.
  */
 function createDb(): DB {
   if (process.env.DATABASE_URL) {
     // Supabase transaction pooler ke liye prepare: false zaroori hai
-    // (Supabase docs ka recommended setting — Neon/direct Postgres par bhi safe hai)
     return drizzlePg(postgres(process.env.DATABASE_URL, { prepare: false }), { schema });
   }
   const client = new PGlite("./.pglite");
@@ -28,6 +28,16 @@ function createDb(): DB {
 
 const globalForDb = globalThis as unknown as { db?: DB };
 
-export const db = globalForDb.db ?? createDb();
+function getDb(): DB {
+  if (!globalForDb.db) globalForDb.db = createDb();
+  return globalForDb.db;
+}
 
-if (process.env.NODE_ENV !== "production") globalForDb.db = db;
+/** Lazy proxy — `db.query...` / `db.transaction...` sab pehli call par init karta hai */
+export const db = new Proxy({} as DB, {
+  get(_target, prop, receiver) {
+    const real = getDb();
+    const value = Reflect.get(real as object, prop, receiver);
+    return typeof value === "function" ? value.bind(real) : value;
+  },
+});

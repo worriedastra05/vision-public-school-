@@ -1,7 +1,8 @@
-import { eq, isNull, or } from "drizzle-orm";
+import { and, desc, eq, isNull, or } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { notices, students } from "@/db/schema";
+import { exams, notices, students } from "@/db/schema";
+import { gradeFor } from "@/lib/grades";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { Reveal } from "@/components/motion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -31,6 +32,23 @@ export default async function StudentDashboard() {
   const totalDays = student?.attendance.length ?? 0;
   const presentDays = student?.attendance.filter((a) => a.status === "PRESENT").length ?? 0;
   const attendancePct = totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : null;
+
+  // Latest published result (student's class ke published exams me apne marks)
+  const latestExam = student
+    ? await db.query.exams.findFirst({
+        where: and(eq(exams.classId, student.classId), eq(exams.isPublished, true)),
+        orderBy: [desc(exams.id)],
+        with: { marks: { where: (m, { eq: e }) => e(m.studentId, student.id) } },
+      })
+    : null;
+
+  let latestResult: { label: string; hint: string } = { label: "—", hint: "Koi result publish nahi hua" };
+  if (latestExam && latestExam.marks.length > 0) {
+    const t = latestExam.marks.reduce((s, m) => s + Number(m.marksObtained), 0);
+    const mx = latestExam.marks.reduce((s, m) => s + Number(m.maxMarks), 0);
+    const pct = mx > 0 ? (t / mx) * 100 : 0;
+    latestResult = { label: `${pct.toFixed(1)}%`, hint: `${latestExam.name} • Grade ${gradeFor(pct)}` };
+  }
 
   return (
     <div className="space-y-6">
@@ -76,7 +94,14 @@ export default async function StudentDashboard() {
           hint={totalDays > 0 ? `${presentDays}/${totalDays} days present` : "No records yet"}
           delay={100}
         />
-        <StatCard label="Report Card" value="Phase 4" icon={FileText} accent="indigo" hint="Coming soon" delay={180} />
+        <StatCard
+          label="Latest Result"
+          value={latestResult.label}
+          icon={FileText}
+          accent="indigo"
+          hint={latestResult.hint}
+          delay={180}
+        />
         <StatCard label="Pending Fees" value="Phase 6" icon={Wallet} accent="amber" hint="Coming soon" delay={260} />
         <StatCard label="Notices" value={noticeRows.length} icon={Bell} accent="rose" delay={340} />
       </div>
