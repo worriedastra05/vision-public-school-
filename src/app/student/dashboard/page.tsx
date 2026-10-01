@@ -3,8 +3,8 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { notices, students } from "@/db/schema";
 import { StatCard } from "@/components/dashboard/stat-card";
+import { Reveal } from "@/components/motion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { ClipboardCheck, Wallet, FileText, Bell, GraduationCap } from "lucide-react";
 
 export default async function StudentDashboard() {
@@ -34,31 +34,38 @@ export default async function StudentDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Profile summary */}
-      <Card className="overflow-hidden border-0 bg-gradient-to-r from-indigo-600 to-indigo-800 text-white shadow-lg">
-        <CardContent className="flex flex-wrap items-center gap-5 p-6">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/15 text-2xl font-bold backdrop-blur">
-            {session!.user.name?.charAt(0).toUpperCase()}
+      {/* Animated gradient profile banner */}
+      <Reveal>
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-brand-600 via-violet-600 to-brand-600 bg-[length:220%_auto] animate-gradient-x p-1 shadow-xl shadow-brand-600/25">
+          <div className="pointer-events-none absolute -left-16 -top-20 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 -right-10 h-56 w-56 rounded-full bg-fuchsia-400/20 blur-3xl" />
+          <div className="relative flex flex-wrap items-center gap-5 rounded-[14px] p-5 md:p-6">
+            <div className="animate-float flex h-16 w-16 items-center justify-center rounded-2xl bg-white/15 text-2xl font-bold text-white shadow-inner backdrop-blur">
+              {session!.user.name?.charAt(0).toUpperCase()}
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-xl font-bold tracking-tight text-white md:text-2xl">
+                Namaste, {session!.user.name} 👋
+              </h2>
+              {student ? (
+                <p className="mt-1 text-sm text-white/80">
+                  {student.class.name}
+                  {student.section ? ` • Section ${student.section.name}` : ""}
+                  {student.rollNo ? ` • Roll No. ${student.rollNo}` : ""} • Adm. No.{" "}
+                  <span className="font-mono font-medium">{student.admissionNo}</span>
+                </p>
+              ) : (
+                <p className="mt-1 text-sm text-white/70">
+                  Aapka student profile abhi admin dwara link nahi hua hai.
+                </p>
+              )}
+            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur">
+              <GraduationCap className="h-3.5 w-3.5" /> Session 2026-27
+            </span>
           </div>
-          <div className="min-w-0 flex-1">
-            <h2 className="text-xl font-bold">Namaste, {session!.user.name} 👋</h2>
-            {student ? (
-              <p className="mt-0.5 text-sm text-indigo-100">
-                {student.class.name}
-                {student.section ? ` • Section ${student.section.name}` : ""}
-                {student.rollNo ? ` • Roll No. ${student.rollNo}` : ""} • Adm. No. {student.admissionNo}
-              </p>
-            ) : (
-              <p className="mt-0.5 text-sm text-indigo-200">
-                Aapka student profile abhi admin dwara link nahi hua hai.
-              </p>
-            )}
-          </div>
-          <Badge className="border-0 bg-white/15 text-white">
-            <GraduationCap className="mr-1 h-3.5 w-3.5" /> Session 2026-27
-          </Badge>
-        </CardContent>
-      </Card>
+        </div>
+      </Reveal>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
@@ -67,41 +74,48 @@ export default async function StudentDashboard() {
           icon={ClipboardCheck}
           accent="emerald"
           hint={totalDays > 0 ? `${presentDays}/${totalDays} days present` : "No records yet"}
+          delay={100}
         />
-        <StatCard label="Report Card" value="Phase 4" icon={FileText} accent="indigo" hint="Coming soon" />
-        <StatCard label="Pending Fees" value="Phase 6" icon={Wallet} accent="amber" hint="Coming soon" />
-        <StatCard label="Notices" value={noticeRows.length} icon={Bell} accent="rose" />
+        <StatCard label="Report Card" value="Phase 4" icon={FileText} accent="indigo" hint="Coming soon" delay={180} />
+        <StatCard label="Pending Fees" value="Phase 6" icon={Wallet} accent="amber" hint="Coming soon" delay={260} />
+        <StatCard label="Notices" value={noticeRows.length} icon={Bell} accent="rose" delay={340} />
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Latest Notices</CardTitle>
-          <CardDescription>School ki taaza announcements</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {noticeRows.length === 0 ? (
-            <p className="text-sm text-slate-400">Abhi koi notice nahi hai.</p>
-          ) : (
-            <div className="space-y-3">
-              {noticeRows.map((notice) => (
-                <div key={notice.id} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="font-medium text-slate-800">{notice.title}</p>
-                    <span className="shrink-0 text-xs text-slate-400">
-                      {notice.createdAt.toLocaleDateString("en-IN", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </span>
+      <Reveal delay={420}>
+        <Card className="card-hover">
+          <CardHeader>
+            <CardTitle>Latest Notices</CardTitle>
+            <CardDescription>School ki taaza announcements</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {noticeRows.length === 0 ? (
+              <p className="text-sm text-slate-400">Abhi koi notice nahi hai.</p>
+            ) : (
+              <div className="space-y-3">
+                {noticeRows.map((notice, i) => (
+                  <div
+                    key={notice.id}
+                    className="animate-fade-up rounded-xl border border-slate-200 bg-gradient-to-r from-slate-50 to-white p-4 transition-all duration-200 hover:border-brand-200 hover:shadow-md hover:shadow-brand-600/10"
+                    style={{ animationDelay: `${450 + i * 90}ms` }}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="font-semibold text-slate-800">{notice.title}</p>
+                      <span className="shrink-0 rounded-full bg-brand-50 px-2.5 py-1 text-[11px] font-medium text-brand-600">
+                        {notice.createdAt.toLocaleDateString("en-IN", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
+                    <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{notice.body}</p>
                   </div>
-                  <p className="mt-1 text-sm text-slate-600">{notice.body}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </Reveal>
     </div>
   );
 }
