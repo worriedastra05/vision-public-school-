@@ -28,7 +28,7 @@ export default async function SuperAdminDashboard() {
     ]);
 
   const schoolName =
-    settingRows.find((s) => s.key === "schoolName")?.value ?? "Vision Public School";
+    settingRows.find((s) => s.key === "school_name")?.value ?? "Vision Public School";
 
   return (
     <div className="space-y-6">

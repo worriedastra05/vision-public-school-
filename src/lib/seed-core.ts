@@ -21,11 +21,11 @@ export async function runSeed(): Promise<{ steps: string[] }> {
 
   // ── School Settings ──
   const settingsData: Record<string, string> = {
-    schoolName: "Vision Public School",
-    schoolAddress: "Main Road, Patna, Bihar 800001",
-    schoolPhone: "+91 98765 43210",
-    schoolEmail: "info@visionpublicschool.edu",
-    schoolTagline: "Education • Discipline • Excellence",
+    school_name: "Vision Public School",
+    school_address: "Main Road, Patna, Bihar 800001",
+    school_phone: "+91 98765 43210",
+    school_email: "info@visionpublicschool.edu",
+    school_tagline: "Education • Discipline • Excellence",
     gradeFormula: "A+:90,A:80,B:70,C:60,D:40,F:0",
   };
   for (const [key, value] of Object.entries(settingsData)) {
