@@ -18,7 +18,9 @@ export type DB = PostgresJsDatabase<typeof schema>;
  */
 function createDb(): DB {
   if (process.env.DATABASE_URL) {
-    return drizzlePg(postgres(process.env.DATABASE_URL), { schema });
+    // Supabase transaction pooler ke liye prepare: false zaroori hai
+    // (Supabase docs ka recommended setting — Neon/direct Postgres par bhi safe hai)
+    return drizzlePg(postgres(process.env.DATABASE_URL, { prepare: false }), { schema });
   }
   const client = new PGlite("./.pglite");
   return drizzlePglite(client, { schema }) as unknown as DB;

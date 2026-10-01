@@ -273,11 +273,20 @@ Dono options **bilkul free, no credit card**:
 | Cost | ₹0 forever, no credit card |
 
 ### Deploy ka process (5 minute):
-1. Code GitHub par push karo (aapka repo ready hai ✅)
+1. Code GitHub par push karo (✅ ho chuka hai — branch `arena/01a0f536-vision-public-school`)
 2. https://vercel.com → **Sign up with GitHub**
 3. **"Add New Project"** → apna repo `vision-public-school-` select karo
-4. **Environment Variables** add karo (database URL, auth secret — ye next section me)
-5. **Deploy** dabao → 2 minute me live: `vision-public-school.vercel.app` 🎉
+4. **4 Environment Variables** paste karo (values `.env` ke commented section me ready hain):
+   - `DATABASE_URL` → Supabase pooler **6543** (app ke liye)
+   - `DIRECT_URL` → Supabase pooler **5432** (build-time migrations ke liye)
+   - `AUTH_SECRET` → repo ki `.env` wali same value
+   - `AUTH_TRUST_HOST` → `true`
+5. **Deploy** dabao → build ke dauraan hi `drizzle-kit migrate` se Supabase par saari tables ban jayengi (vercel.json me pre-configured)
+6. Deploy hone ke baad **EK BAAR** ye link browser me kholo (demo users + school data ban jayega):
+   `https://<aapki-app>.vercel.app/api/setup?secret=<AUTH_SECRET>`
+   → `{"ok":true,...}` dikh jaye to bas! Login kar lo 🎉
+
+> 🔧 Inhe "arena-wale sandbox se Supabase kyu nahi juda?" ke liye note: Arena sandbox ka firewall external databases ko block karta hai (development PGlite par chalta hai), par **Vercel ke servers se Supabase bilkul free me connect hota hai** — isliye migrations build step me chalte hain aur seed `/api/setup` se ek click me ho jata hai.
 
 ### Kab paid lagega?
 School scale par **kabhi nahi** — 100GB bandwidth school traffic se kahin zyada hai. Baad me chaaho to:

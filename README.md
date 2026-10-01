@@ -28,10 +28,16 @@ npm run dev                                   # http://localhost:3000
 ## 🧱 Tech Stack
 **Next.js 16** • TypeScript • Tailwind CSS v4 • **Drizzle ORM** • PostgreSQL (local: PGlite embedded • prod: Neon) • Auth.js v5
 
-## 🌐 Production Deploy
-1. [Neon](https://neon.tech) par free database banao, connection string copy karo
-2. [Vercel](https://vercel.com) par repo import karo
-3. Env vars set karo: `DATABASE_URL` (Neon ka), `AUTH_SECRET`, `AUTH_TRUST_HOST=true`
-4. Deploy → phir `npm run db:migrate && npm run db:seed` Neon URL ke saath ek baar chalao
+## 🌐 Production Deploy (Vercel + Supabase)
+1. **Supabase:** [supabase.com](https://supabase.com) → New project → database password save karo
+2. **Vercel:** [vercel.com](https://vercel.com) → GitHub se login → repo import → Deploy
+3. **4 env vars** set karo (Vercel Dashboard → Project → Settings → Environment Variables), values `.env` file ke commented section me ready hain:
+   - `DATABASE_URL` (Supabase **pooler**, port 6543)
+   - `DIRECT_URL` (Supabase **pooler**, port 5432 — build-time migrations ke liye)
+   - `AUTH_SECRET` (koi bhi 64-char random hex string)
+   - `AUTH_TRUST_HOST` = `true`
+4. Deploy → build khud `drizzle-kit migrate` chala ke tables bana dega (vercel.json me setup hai)
+5. Deploy hone ke baad **ek baar** ye link kholo (demo users ban jayenge):
+   `https://<aapki-app>.vercel.app/api/setup?secret=<AUTH_SECRET>`
 
 👉 **Poori deep research & roadmap:** [SCHOOL-MANAGEMENT-GUIDE.md](./SCHOOL-MANAGEMENT-GUIDE.md)
