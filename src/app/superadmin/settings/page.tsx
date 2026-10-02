@@ -16,7 +16,7 @@ const DEFAULTS: Record<string, string> = {
   school_tagline: "Education • Discipline • Excellence",
   school_address: "Main Road, Patna, Bihar 800001",
   school_phone: "+91 98765 43210",
-  school_email: "info@visionpublicschool.edu",
+  school_email: "info@visionpublicschool.com",
 };
 
 export default async function SettingsPage({
@@ -40,7 +40,7 @@ export default async function SettingsPage({
           <div>
             <h1 className="text-xl font-bold tracking-tight text-slate-900">School Settings</h1>
             <p className="text-sm text-slate-500">
-              Ye details ID cards, receipts aur poore portal me live hoti hain.
+              These details go live on ID cards, receipts and across the portal.
             </p>
           </div>
         </div>
@@ -60,9 +60,9 @@ export default async function SettingsPage({
       <Reveal delay={120}>
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">School Ki Jankari</CardTitle>
+            <CardTitle className="text-base">School Information</CardTitle>
             <CardDescription>
-              Save karte hi ID Cards, Fee Receipts aur Verify page sab par turant reflect hoga.
+              Saving reflects instantly on ID Cards, Fee Receipts and the Verify page.
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-5">
@@ -85,9 +85,9 @@ export default async function SettingsPage({
         <div className="flex items-start gap-3 rounded-2xl border border-indigo-100 bg-gradient-to-r from-indigo-50 to-violet-50 p-5">
           <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-indigo-500" />
           <p className="text-sm leading-relaxed text-slate-600">
-            <span className="font-semibold text-slate-800">Tip:</span> Session year jaisi cheezein{" "}
-            <span className="font-medium">Classes section</span> ke academic session se aati hain — ID card ki
-            &quot;Valid Through&quot; date session ke end se banti hai.
+            <span className="font-semibold text-slate-800">Tip:</span> Things like the session year come from
+            the academic session in the <span className="font-medium">Classes section</span> — the ID card
+            &quot;Valid Through&quot; date is derived from the session end.
           </p>
         </div>
       </Reveal>

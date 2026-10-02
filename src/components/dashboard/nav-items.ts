@@ -11,6 +11,7 @@ import {
   Bell,
   CalendarDays,
   User,
+  UserPlus,
   ScrollText,
   Settings,
   CalendarClock,
@@ -22,13 +23,14 @@ export interface NavItem {
   label: string;
   href: string;
   icon: LucideIcon;
-  soon?: boolean; // next phases me implement hoga
+  soon?: boolean; // placeholder for an upcoming module
 }
 
 export const NAV_ITEMS: Record<string, NavItem[]> = {
   SUPERADMIN: [
     { label: "Dashboard", href: "/superadmin/dashboard", icon: LayoutDashboard },
     { label: "Students", href: "/admin/students", icon: GraduationCap },
+    { label: "New Admission", href: "/admin/students/new", icon: UserPlus },
     { label: "Teachers", href: "/admin/teachers", icon: Users },
     { label: "Classes", href: "/admin/classes", icon: BookOpen },
     { label: "Exams & Results", href: "/admin/exams", icon: FileText },
@@ -45,6 +47,7 @@ export const NAV_ITEMS: Record<string, NavItem[]> = {
   ADMIN: [
     { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     { label: "Students", href: "/admin/students", icon: GraduationCap },
+    { label: "New Admission", href: "/admin/students/new", icon: UserPlus },
     { label: "Teachers", href: "/admin/teachers", icon: Users },
     { label: "Classes", href: "/admin/classes", icon: BookOpen },
     { label: "Attendance", href: "/admin/attendance", icon: ClipboardCheck },
@@ -67,7 +70,10 @@ export const NAV_ITEMS: Record<string, NavItem[]> = {
   ],
 };
 
-/** Pathname se nav item dhoondo (page title ke liye) */
+/** Find the nav item for a pathname (page header title). Longest href wins,
+ *  so /admin/students/new resolves to "New Admission", not "Students". */
 export function findNavItem(role: string, pathname: string) {
-  return (NAV_ITEMS[role] ?? []).find((i) => pathname === i.href || pathname.startsWith(i.href + "/"));
+  return [...(NAV_ITEMS[role] ?? [])]
+    .filter((i) => pathname === i.href || pathname.startsWith(i.href + "/"))
+    .sort((a, b) => b.href.length - a.href.length)[0];
 }

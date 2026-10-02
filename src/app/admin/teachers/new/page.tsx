@@ -29,7 +29,7 @@ export default async function NewTeacherPage({
           </Link>
           <div>
             <h2 className="text-xl font-bold tracking-tight text-slate-900">Add Teacher</h2>
-            <p className="text-sm text-slate-500">Faculty record + employee ID auto-generate hoga</p>
+            <p className="text-sm text-slate-500">Creates the faculty record + auto-generates an employee ID</p>
           </div>
         </div>
       </Reveal>
@@ -51,7 +51,7 @@ export default async function NewTeacherPage({
               </div>
               <div>
                 <CardTitle>Teacher Details</CardTitle>
-                <CardDescription>Employee ID (TCH-001...) system banayega</CardDescription>
+                <CardDescription>The system assigns the employee ID (TCH-001...)</CardDescription>
               </div>
             </div>
           </CardHeader>
@@ -72,7 +72,7 @@ export default async function NewTeacherPage({
 
               <div className="flex items-start gap-2.5 rounded-xl bg-slate-50 p-3.5 text-xs leading-relaxed text-slate-500">
                 <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand-500" />
-                Teacher ka account abhi <strong>inactive</strong> rahega — teacher portal ke phase me activate hoga.
+                The teacher account stays <strong>inactive</strong> for now — it will be activated when the teacher portal ships.
               </div>
 
               <div className="flex items-center gap-3">

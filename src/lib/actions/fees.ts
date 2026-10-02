@@ -27,12 +27,12 @@ export async function addFeeStructure(formData: FormData) {
     amount: formData.get("amount"),
     frequency: formData.get("frequency"),
   });
-  if (!parsed.success) redirect("/admin/fees/structure?err=Details sahi nahi hain");
+  if (!parsed.success) redirect("/admin/fees/structure?err=" + encodeURIComponent("The details are invalid"));
   const { classId, type, amount, frequency } = parsed.data;
 
   const existing = await db.query.feeStructures.findMany({ where: eq(feeStructures.classId, classId) });
   if (existing.some((s) => s.type.trim().toLowerCase() === type.toLowerCase())) {
-    redirect(`/admin/fees/structure?err=${encodeURIComponent(`"${type}" us class me pehle se hai`)}`);
+    redirect(`/admin/fees/structure?err=${encodeURIComponent(`"${type}" already exists for that class`)}`);
   }
 
   await db.insert(feeStructures).values({ classId, type, amount: String(amount), frequency });
@@ -57,9 +57,9 @@ const itemSchema = z.object({
   amount: z.number().min(1).max(100000),
 });
 
-/** Naya payment — ek receipt me multiple fee items.
+/** Record a payment — one receipt can carry multiple fee items.
  *  Receipt no: RCP-YYYY-##### auto (max existing + 1)
- *  Amount server-side items se compute hota hai (client trust nahi). */
+ *  The amount is computed server-side from the items (the client is never trusted). */
 export async function recordPayment(formData: FormData) {
   const session = await requireRole(...MANAGERS);
 
@@ -68,7 +68,7 @@ export async function recordPayment(formData: FormData) {
   const note = String(formData.get("note") ?? "").slice(0, 120);
 
   if (!z.enum(["CASH", "UPI", "CHEQUE", "ONLINE"]).safeParse(mode).success) {
-    redirect(`/admin/fees/collect/${studentId}?err=Mode sahi nahi hai`);
+    redirect(`/admin/fees/collect/${studentId}?err=Invalid payment mode`);
   }
 
   let raw: unknown = null;
@@ -79,7 +79,7 @@ export async function recordPayment(formData: FormData) {
   }
   const itemsParsed = z.array(itemSchema).min(1).safeParse(raw ?? []);
   if (!itemsParsed.success) {
-    redirect(`/admin/fees/collect/${studentId}?err=Kam se kam 1 fee item check karo`);
+    redirect(`/admin/fees/collect/${studentId}?err=Select at least 1 fee item`);
   }
   const items = itemsParsed.data;
   const total = items.reduce((s, i) => s + i.amount, 0);
@@ -89,7 +89,7 @@ export async function recordPayment(formData: FormData) {
     where: eq(students.id, studentId),
     with: { user: true },
   });
-  if (!student) redirect("/admin/fees/collect?err=Student nahi mila");
+  if (!student) redirect("/admin/fees/collect?err=" + encodeURIComponent("Student not found"));
 
   // Receipt number: RCP-YYYY-##### (counter from existing)
   const year = new Date().getFullYear();
@@ -120,7 +120,7 @@ export async function recordPayment(formData: FormData) {
   redirect(`/receipt/${receiptNo}?new=1`);
 }
 
-/** Payment delete (ghalti se wrong entry ho to) */
+/** Delete a payment (in case of a wrong entry) */
 export async function deletePayment(formData: FormData) {
   const session = await requireRole(...MANAGERS);
   const id = String(formData.get("id") ?? "");
@@ -140,7 +140,7 @@ export async function deletePayment(formData: FormData) {
   redirect("/admin/fees?deleted=1");
 }
 
-/** Structure fetch helper for collect page */
+/** Structure fetch helper for the collect page */
 export async function _structuresForClass(classId: string) {
   return db.query.feeStructures.findMany({
     where: eq(feeStructures.classId, classId),

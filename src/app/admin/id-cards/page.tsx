@@ -7,7 +7,6 @@ import { getCardData, getOrigin, getSchoolInfo, validThrough } from "@/lib/idcar
 import { StudentIdCardFront, StudentIdCardBack } from "@/components/id-card/student-id-card";
 import { PrintButton } from "@/components/print-button";
 import { Reveal } from "@/components/motion";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { IdCard, Users } from "lucide-react";
@@ -52,7 +51,7 @@ export default async function AdminIdCardsPage({
         <div className="flex flex-wrap items-center justify-between gap-4 print:hidden">
           <div>
             <h2 className="text-xl font-bold tracking-tight text-slate-900">ID Cards</h2>
-            <p className="text-sm text-slate-500">Class choose karo — sabki cards ek saath dikhengi & print hongi (front, phir back)</p>
+            <p className="text-sm text-slate-500">Choose a class — all cards render together and print in one go (fronts, then backs)</p>
           </div>
           <div className="flex items-center gap-2.5">
             <form method="get" className="flex items-center gap-2">
@@ -77,7 +76,7 @@ export default async function AdminIdCardsPage({
         <Reveal delay={80}>
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center print:hidden">
             <IdCard className="mx-auto h-8 w-8 text-slate-300" />
-            <p className="mt-3 text-sm text-slate-500">Upar se class choose karo — cards yahan banengi</p>
+            <p className="mt-3 text-sm text-slate-500">Choose a class above — the cards will be built here</p>
           </div>
         </Reveal>
       )}
@@ -86,7 +85,7 @@ export default async function AdminIdCardsPage({
         <Reveal delay={80}>
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center print:hidden">
             <Users className="mx-auto h-8 w-8 text-slate-300" />
-            <p className="mt-3 text-sm text-slate-500">{selClass?.name} me koi student nahi</p>
+            <p className="mt-3 text-sm text-slate-500">{selClass?.name} has no students</p>
           </div>
         </Reveal>
       )}
@@ -144,7 +143,7 @@ export default async function AdminIdCardsPage({
       )}
 
       <p className="text-xs text-slate-400 print:hidden">
-        Print tip: A4 sheet par <strong>Actual size</strong> scale rakho — pehle fronts, agle page par backs. Laminate jaroor karwao.
+        Print tip: keep the scale at <strong>Actual size</strong> on A4 — fronts first, backs on the next page. Do get the cards laminated.
       </p>
     </div>
   );

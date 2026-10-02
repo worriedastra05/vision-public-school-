@@ -12,7 +12,7 @@ interface StatCardProps {
   delay?: number;
 }
 
-/** Oxford calm: icon flat ink tile me, gold micro-rule number ke neeche */
+/** Oxford calm: icon in a flat ink tile, gold micro-rule under the number */
 const tileStyles = {
   indigo: "bg-brand-800 text-gold-300",
   emerald: "bg-brand-800 text-gold-300",
@@ -22,8 +22,8 @@ const tileStyles = {
 };
 
 /**
- * SERVER component (icon prop sirf server side render hota hai).
- * Count-up animation alag chhote client component me — production RSC-safe.
+ * SERVER component (the icon prop only renders server-side).
+ * The count-up animation lives in a tiny client component — production RSC-safe.
  */
 export function StatCard({ label, value, icon: Icon, accent = "indigo", hint, delay = 0 }: StatCardProps) {
   return (

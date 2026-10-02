@@ -5,6 +5,9 @@ import { db } from "@/lib/db";
 import { students } from "@/db/schema";
 import { updateStudent, resetStudentPassword, toggleStudentActive } from "@/lib/actions/students";
 import { requireRole } from "@/lib/guards";
+import { qrSvg } from "@/lib/qrcode";
+import { getCardData, getOrigin, getSchoolInfo, validThrough } from "@/lib/idcard-data";
+import { StudentIdCardFront, StudentIdCardBack } from "@/components/id-card/student-id-card";
 import { Reveal } from "@/components/motion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,6 +17,7 @@ import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ConfirmSubmit } from "@/components/forms/confirm-submit";
+import { PhotoPicker } from "@/components/forms/photo-picker";
 import {
   ArrowLeft,
   KeyRound,
@@ -23,6 +27,7 @@ import {
   UserRound,
   Power,
   Save,
+  IdCard,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -44,19 +49,19 @@ export default async function StudentDetailPage({
   });
   if (!student) notFound();
 
-  const [classRows, sectionRows] = await Promise.all([
+  const [classRows, classSections, school, origin] = await Promise.all([
     db.query.classes.findMany({ orderBy: (c, { asc }) => [asc(c.name)] }),
     db.query.sections.findMany({
-      where: eq(students.classId, student.classId),
+      where: (s, { and, eq }) => and(eq(s.classId, student.classId)),
       orderBy: (s, { asc }) => [asc(s.name)],
     }),
+    getSchoolInfo(),
+    getOrigin(),
   ]);
-  // filter sections of student's class
-  const classSections = await db.query.sections.findMany({
-    where: (s, { and, eq }) => and(eq(s.classId, student.classId)),
-    orderBy: (s, { asc }) => [asc(s.name)],
-  });
-  void sectionRows;
+
+  // Instant ID-card preview (shown right after admission)
+  const cardData = isNew ? await getCardData(student) : null;
+  const qr = isNew ? await qrSvg(`${origin}/verify/${student.admissionNo}`, 88) : null;
 
   return (
     <div className="mx-auto max-w-4xl space-y-5">
@@ -79,7 +84,7 @@ export default async function StudentDetailPage({
         </div>
       </Reveal>
 
-      {/* 🔑 Temporary credentials — SIRF EK BAAR dikhta hai */}
+      {/* Temporary credentials — shown exactly ONCE */}
       {temp && (
         <Reveal>
           <div className="relative overflow-hidden rounded-2xl border-2 border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 p-5 shadow-lg shadow-amber-500/10">
@@ -90,10 +95,10 @@ export default async function StudentDetailPage({
               </div>
               <div className="flex-1">
                 <h3 className="font-bold text-slate-900">
-                  {isNew ? "Admission ho gaya!" : "🔑 Password reset ho gaya!"} Login Details
+                  {isNew ? "Admission successful!" : "Password reset successful!"} Login Details
                 </h3>
                 <p className="mt-0.5 text-xs text-amber-700">
-                  Ye details <strong>sirf abhi</strong> dikh rahi hain — abhi note kar lein aur parent ko de dein.
+                  These details are shown <strong>only now</strong> — please note them down and share them with the parent.
                 </p>
                 <div className="mt-3 grid gap-2.5 sm:grid-cols-3">
                   <div className="rounded-lg bg-white/70 p-3">
@@ -110,11 +115,51 @@ export default async function StudentDetailPage({
                   </div>
                 </div>
                 <p className="mt-2.5 text-xs text-slate-500">
-                  Student login page par <strong>admission number</strong> ya <strong>email</strong> — dono se login kar sakta hai.
+                  The student can sign in with either their <strong>admission number</strong> or <strong>email</strong>.
                 </p>
               </div>
             </div>
           </div>
+        </Reveal>
+      )}
+
+      {/* Instant ID-card preview right after admission */}
+      {isNew && cardData && qr && (
+        <Reveal delay={60}>
+          <Card className="card-hover">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <IdCard className="h-5 w-5 text-brand-600" /> ID Card Preview
+              </CardTitle>
+              <CardDescription>
+                Ready instantly — print it from the ID Cards page anytime
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap items-start gap-6">
+                <div className="space-y-2">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Front</p>
+                  <StudentIdCardFront
+                    student={cardData}
+                    schoolName={school.name}
+                    sessionName={school.session?.name ?? ""}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Back</p>
+                  <StudentIdCardBack
+                    student={cardData}
+                    schoolName={school.name}
+                    qrSvgMarkup={qr}
+                    validThrough={validThrough(school.session)}
+                  />
+                </div>
+              </div>
+              <p className="mt-4 text-xs text-slate-500">
+                Missing the photo? Upload it below in the edit form — the card updates instantly.
+              </p>
+            </CardContent>
+          </Card>
         </Reveal>
       )}
 
@@ -126,7 +171,7 @@ export default async function StudentDetailPage({
             }`}
           >
             {err ? <XCircle className="h-4.5 w-4.5" /> : <CheckCircle2 className="h-4.5 w-4.5" />}
-            {err ?? (updated ? "Profile update ho gaya!" : "Password reset ho gaya!")}
+            {err ?? (updated ? "Profile updated!" : "Password reset!")}
           </div>
         </Reveal>
       )}
@@ -182,7 +227,7 @@ export default async function StudentDetailPage({
                 <form action={resetStudentPassword}>
                   <input type="hidden" name="id" value={student.id} />
                   <ConfirmSubmit
-                    message={`${student.user.name} ka password RESET karein? Naya temporary password banega.`}
+                    message={`Reset the password for ${student.user.name}? A new temporary password will be generated.`}
                     className="flex w-full items-center justify-center gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-700 transition-colors hover:bg-amber-100"
                   >
                     <KeyRound className="h-4 w-4" /> Reset Password
@@ -191,7 +236,7 @@ export default async function StudentDetailPage({
                 <form action={toggleStudentActive}>
                   <input type="hidden" name="id" value={student.id} />
                   <ConfirmSubmit
-                    message={`${student.user.name} ka login ${student.user.isActive ? "DISABLE" : "ENABLE"} karein?`}
+                    message={`${student.user.isActive ? "DISABLE" : "ENABLE"} the login for ${student.user.name}?`}
                     className={`flex w-full items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
                       student.user.isActive
                         ? "border-red-200 bg-red-50 text-red-600 hover:bg-red-100"
@@ -214,11 +259,18 @@ export default async function StudentDetailPage({
               <CardTitle className="flex items-center gap-2 text-base">
                 <UserRound className="h-5 w-5 text-brand-600" /> Edit Student Details
               </CardTitle>
-              <CardDescription>Changes save hote hi portal par update ho jayenge</CardDescription>
+              <CardDescription>Changes go live across the portal as soon as you save</CardDescription>
             </CardHeader>
             <CardContent>
               <form action={updateStudent} className="grid gap-4">
                 <input type="hidden" name="id" value={student.id} />
+
+                {/* ID-card photo — can be added/changed any time after admission */}
+                <div className="space-y-2 rounded-xl border border-slate-100 bg-slate-50/60 p-4">
+                  <Label>ID Card Photo</Label>
+                  <PhotoPicker defaultPhoto={student.photo} />
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name *</Label>
                   <Input id="name" name="name" defaultValue={student.user.name} required minLength={2} />
@@ -245,7 +297,7 @@ export default async function StudentDetailPage({
                       ))}
                     </Select>
                     <p className="flex items-start gap-1 text-[10px] leading-tight text-slate-400">
-                      <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" /> Class badalne par section dobara choose karein
+                      <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" /> If you change the class, choose the section again
                     </p>
                   </div>
                   <div className="space-y-2">

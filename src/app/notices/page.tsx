@@ -19,7 +19,7 @@ export default async function NoticesPage() {
   const session = await requireUser();
   const role = session.user.role;
 
-  // Student ho to uski class ke target notices bhi include karo
+  // Students also see notices targeted at their class
   let studentClassId: string | null = null;
   if (role === "STUDENT") {
     const student = await db.query.students.findFirst({
@@ -36,7 +36,7 @@ export default async function NoticesPage() {
             eq(notices.targetRole, "STUDENT"),
             ...(studentClassId ? [eq(notices.targetClassId, studentClassId)] : [])
           )
-        : undefined, // admin / superadmin sab dekhte hain
+        : undefined, // admin / superadmin see everything
     with: {
       createdBy: { columns: { name: true } },
       targetClass: { columns: { name: true } },
@@ -66,7 +66,7 @@ export default async function NoticesPage() {
               <h2 className="text-xl font-bold tracking-tight text-slate-900">Notice Board</h2>
               <p className="text-sm text-slate-500">
                 {rows.length} announcement{rows.length === 1 ? "" : "s"}
-                {role === "STUDENT" ? " — aapke liye" : " — poori school ki"}
+                {role === "STUDENT" ? " — for you" : " — whole school"}
               </p>
             </div>
           </div>
@@ -76,7 +76,7 @@ export default async function NoticesPage() {
           <Reveal delay={100}>
             <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
               <Bell className="mx-auto h-8 w-8 text-slate-300" />
-              <p className="mt-3 text-sm text-slate-500">Abhi koi notice nahi hai.</p>
+              <p className="mt-3 text-sm text-slate-500">No notices yet.</p>
             </div>
           </Reveal>
         ) : (

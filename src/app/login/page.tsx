@@ -11,7 +11,6 @@ import {
   IdCard,
   Wallet,
   FileText,
-  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,11 +39,11 @@ function LoginForm() {
     setLoading(false);
 
     if (res?.error) {
-      // MissingCSRF = browser ne cookie block ki (iframe/desktop-mode me hota hai)
+      // MissingCSRF = the browser blocked cookies (happens inside iframes / desktop mode)
       setError(
         String(res.error).includes("MissingCSRF")
-          ? "Browser ne cookies block kar di hain — preview ko naye tab me khol kar try karein."
-          : "Email ya password galat hai. Dobara try karein."
+          ? "Your browser has blocked cookies — open the portal in a new tab and try again."
+          : "Incorrect email or password. Please try again."
       );
       return;
     }
@@ -61,23 +60,23 @@ function LoginForm() {
             <GraduationCap className="h-5 w-5 text-gold-400" />
           </div>
           <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-            Portal Login
+            Portal Sign In
           </h2>
           <div className="gold-rule mt-3 w-16" />
           <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
-            Apna email aur password daal kar login karein
+            Enter your email and password to sign in
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="email">Email ya Admission Number</Label>
+            <Label htmlFor="email">Email or Admission Number</Label>
             <div className="relative">
               <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <Input
                 id="email"
                 type="text"
-                placeholder="email@school.edu  ya  VPS20260001"
+                placeholder="email@school.com  or  VPS20260001"
                 className="pl-10"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -86,7 +85,7 @@ function LoginForm() {
               />
             </div>
             <p className="text-[11px] text-slate-400 dark:text-slate-500">
-              Students apna Admission Number (jaise VPS20260001) se bhi login kar sakte hain
+              Students can also sign in with their Admission Number (e.g. VPS20260001)
             </p>
           </div>
           <div className="space-y-2">
@@ -115,34 +114,22 @@ function LoginForm() {
           <Button type="submit" variant="gold" className="w-full" size="lg" disabled={loading}>
             {loading ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" /> Logging in...
+                <Loader2 className="h-4 w-4 animate-spin" /> Signing in...
               </>
             ) : (
-              "Login to Portal"
+              "Sign in to Portal"
             )}
           </Button>
         </form>
-
-        {/* Dev demo credentials — PRODUCTION me hata dena */}
-        <div className="mt-7 rounded-xl border border-dashed border-slate-200 bg-slate-50/80 p-4 text-xs leading-relaxed text-slate-500 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-400">
-          <p className="mb-2 flex items-center gap-1.5 font-semibold text-slate-600 dark:text-slate-300">
-            <ShieldCheck className="h-3.5 w-3.5 text-gold-600" /> Demo logins:
-          </p>
-          <div className="space-y-1 font-mono text-[11px]">
-            <p><span className="text-gold-700 dark:text-gold-400">SUPER</span> superadmin@visionpublicschool.edu / Super@123</p>
-            <p><span className="text-brand-700 dark:text-brand-300">ADMIN</span> admin@visionpublicschool.edu / Admin@123</p>
-            <p><span className="text-emerald-700 dark:text-emerald-400">STUDENT</span> student@visionpublicschool.edu / Student@123</p>
-          </div>
-        </div>
       </div>
     </div>
   );
 }
 
 const features = [
-  { icon: FileText, text: "Report cards — digital, printable, ek click publish" },
-  { icon: IdCard, text: "QR code ke saath smart student ID cards" },
-  { icon: Wallet, text: "Fee tracking, receipts aur dues — sab transparent" },
+  { icon: FileText, text: "Report cards — digital, printable, one-click publish" },
+  { icon: IdCard, text: "Smart student ID cards with QR verification" },
+  { icon: Wallet, text: "Fee tracking, receipts and dues — fully transparent" },
 ];
 
 export default function LoginPage() {
@@ -182,12 +169,12 @@ export default function LoginPage() {
 
         <div className="relative z-10 space-y-7">
           <h1 className="animate-fade-up font-display text-[42px] font-bold leading-[1.15] tracking-tight" style={{ animationDelay: "110ms" }}>
-            Shiksha ka
+            A new era of
             <br />
-            digital <span className="text-gradient italic">shatabdi.</span>
+            digital <span className="text-gradient italic">education.</span>
           </h1>
           <p className="animate-fade-up max-w-md font-display text-[15px] italic leading-relaxed text-slate-300/90" style={{ animationDelay: "200ms" }}>
-            "Padhai, parampara aur pragati — ab ek portal me."
+            &quot;Learning, character and progress — now in one portal.&quot;
           </p>
           <div className="space-y-3">
             {features.map(({ icon: Icon, text }, i) => (

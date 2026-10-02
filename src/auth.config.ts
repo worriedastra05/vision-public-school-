@@ -3,7 +3,7 @@ import type { Role } from "@/db/schema";
 
 /**
  * Edge-safe auth config — NO database / bcrypt imports here.
- * proxy.ts (route guard) isko use karta hai; providers auth.ts me add hote hain.
+ * proxy.ts (the route guard) uses this; providers are added in auth.ts.
  */
 export const authConfig = {
   pages: {
@@ -13,9 +13,9 @@ export const authConfig = {
     strategy: "jwt",
   },
   /**
-   * Preview iframe / embedded contexts me third-party cookies block hoti hain
-   * (SameSite=Lax POST par nahi jaati → MissingCSRF). SameSite=None + Secure
-   * iframe/Vercel dono jagah kaam karta hai (sab https hai).
+   * Preview iframes / embedded contexts block third-party cookies
+   * (SameSite=Lax never survives a POST → MissingCSRF). SameSite=None + Secure
+   * works in both iframe and Vercel contexts (everything is https).
    */
   cookies: {
     sessionToken: {
@@ -47,5 +47,5 @@ export const authConfig = {
       return session;
     },
   },
-  providers: [], // Credentials provider auth.ts me (Node runtime) jata hai
+  providers: [], // The Credentials provider is added in auth.ts (Node runtime)
 } satisfies NextAuthConfig;

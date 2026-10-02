@@ -39,11 +39,10 @@ export function CollectForm({
       <div className="space-y-2.5">
         {structures.length === 0 && (
           <p className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-500">
-            Is class ki fee structure nahi bani — pehle{" "}
+            No fee structure exists for this class — first{" "}
             <a href="/admin/fees/structure" className="font-semibold text-brand-600 hover:underline">
-              Fee Structure
-            </a>{" "}
-            set karo
+              set up the Fee Structure
+            </a>
           </p>
         )}
         {structures.map((s) => (
@@ -64,7 +63,7 @@ export function CollectForm({
             <span className="min-w-0 flex-1">
               <span className="block text-sm font-semibold text-slate-800">{s.type}</span>
               <span className="text-[11px] text-slate-400">
-                {s.frequency === "MONTHLY" ? "har mahine" : s.frequency === "TERM" ? "per term" : "ek baar"}
+                {s.frequency === "MONTHLY" ? "every month" : s.frequency === "TERM" ? "per term" : "one-time"}
               </span>
             </span>
             <span className="flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 py-1.5">

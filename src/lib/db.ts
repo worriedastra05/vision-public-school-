@@ -9,18 +9,28 @@ export type DB = PostgresJsDatabase<typeof schema>;
 /**
  * Database connection strategy:
  *
- *  - Production (Vercel/Neon):  DATABASE_URL set hai → postgres-js se connect
- *  - Local dev (no setup):      DATABASE_URL nahi hai → PGlite (embedded Postgres,
- *                               data ./.pglite folder me persist hota hai)
+ *  - Production (Vercel/Neon):  DATABASE_URL is set → connect via postgres-js
+ *  - Local dev (no setup):      no DATABASE_URL → PGlite (embedded Postgres,
+ *                               data persists in ./.pglite)
  *
- * IMPORTANT — LAZY singleton: connection SIRF pehli query par banta hai.
- * Agar module import par banaya to `next build` bhi PGlite open kar leta
- * (route modules import hote hain) → do processes, corrupt data dir.
+ * IMPORTANT — LAZY singleton: the connection is created on the FIRST query only.
+ * Creating it at module-import time would let `next build` open PGlite too
+ * (route modules get imported) → two processes, corrupt data dir.
  */
 function createDb(): DB {
   if (process.env.DATABASE_URL) {
-    // Supabase transaction pooler ke liye prepare: false zaroori hai
-    return drizzlePg(postgres(process.env.DATABASE_URL, { prepare: false }), { schema });
+    // prepare: false is required for transaction-mode poolers (Supabase/Neon).
+    // Pool tuned for serverless: modest ceiling, quick idle recycle, fast
+    // connection timeout so cold starts fail fast instead of hanging.
+    return drizzlePg(
+      postgres(process.env.DATABASE_URL, {
+        prepare: false,
+        max: 20, // max connections in the pool
+        idle_timeout: 20, // seconds an idle connection lives before closing
+        connect_timeout: 10, // seconds to wait while acquiring a connection
+      }),
+      { schema }
+    );
   }
   const client = new PGlite("./.pglite");
   return drizzlePglite(client, { schema }) as unknown as DB;
@@ -33,7 +43,7 @@ function getDb(): DB {
   return globalForDb.db;
 }
 
-/** Lazy proxy — `db.query...` / `db.transaction...` sab pehli call par init karta hai */
+/** Lazy proxy — `db.query...` / `db.transaction...` initialise on first call */
 export const db = new Proxy({} as DB, {
   get(_target, prop, receiver) {
     const real = getDb();

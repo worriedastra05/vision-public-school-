@@ -33,7 +33,7 @@ export default async function MyIdCardPage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-xl font-bold tracking-tight text-slate-900">My ID Card</h2>
-            <p className="text-sm text-slate-500">Sab jagah kaam aayega — file me print karke laminate karwao</p>
+            <p className="text-sm text-slate-500">Valid everywhere — print it using the button and get it laminated</p>
           </div>
           <PrintButton />
         </div>
@@ -72,8 +72,8 @@ export default async function MyIdCardPage() {
             <div>
               <p className="text-sm font-semibold text-slate-800">QR Code Verification</p>
               <p className="text-xs leading-relaxed text-slate-500">
-                Koi bhi QR scan karke aapke card ki validity confirm kar sakta hai — direct school
-                ke live records par le jaata hai.
+                Anyone can scan the QR code to confirm your card&apos;s validity — it leads
+                straight to the school&apos;s live records.
               </p>
             </div>
           </div>
@@ -82,10 +82,10 @@ export default async function MyIdCardPage() {
               <Camera className="h-4.5 w-4.5" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-slate-800">Photo add karwana hai?</p>
+              <p className="text-sm font-semibold text-slate-800">Want to change your photo?</p>
               <p className="text-xs leading-relaxed text-slate-500">
-                Agar photo nahi dikhi to school office me passport-size photo jama karwao —
-                admin admission form me upload karega.
+                Upload a passport-size photo yourself from the Profile page, or ask the
+                school office to do it — the card updates instantly.
               </p>
             </div>
           </div>
@@ -96,8 +96,8 @@ export default async function MyIdCardPage() {
             <div>
               <p className="text-sm font-semibold text-slate-800">Print tip</p>
               <p className="text-xs leading-relaxed text-slate-500">
-                Print karte waqt <strong>Actual size / 100%</strong> scale rakho — card CR80 size
-                (credit card size) ka banta hai.
+                While printing keep the scale at <strong>Actual size / 100%</strong> — the card
+                is CR80 sized (credit-card size).
               </p>
             </div>
           </div>

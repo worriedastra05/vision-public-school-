@@ -82,7 +82,7 @@ export default async function MarksEntryPage({
             }`}
           >
             {err ? <XCircle className="h-4.5 w-4.5" /> : <CheckCircle2 className="h-4.5 w-4.5" />}
-            {err ?? `${saved} marks entries save ho gayi!`}
+            {err ?? `${saved} marks entries saved!`}
           </div>
         </Reveal>
       )}
@@ -91,8 +91,8 @@ export default async function MarksEntryPage({
         <Reveal>
           <div className="flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
             <AlertTriangle className="mt-0.5 h-4.5 w-4.5 shrink-0" />
-            Result <strong>PUBLISHED</strong> hai — students ko dikh raha hai. Edit karne ke liye pehle{" "}
-            <strong>Unpublish</strong> karo (Exams page se).
+            The result is <strong>PUBLISHED</strong> and visible to students. To edit, first{" "}
+            <strong>Unpublish</strong> it from the Exams page.
           </div>
         </Reveal>
       )}
@@ -102,9 +102,9 @@ export default async function MarksEntryPage({
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
             <BookOpen className="mx-auto h-8 w-8 text-slate-300" />
             <p className="mt-3 text-sm text-slate-500">
-              {exam.class.name} me koi subject nahi hai — pehle{" "}
+              {exam.class.name} has no subjects — first{" "}
               <Link href="/admin/classes" className="font-semibold text-brand-600 hover:underline">
-                Classes page par subjects add karo
+                add subjects from the Classes page
               </Link>
             </p>
           </div>
@@ -112,7 +112,7 @@ export default async function MarksEntryPage({
       ) : roster.length === 0 ? (
         <Reveal delay={80}>
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
-            <p className="text-sm text-slate-500">{exam.class.name} me koi student nahi hai</p>
+            <p className="text-sm text-slate-500">{exam.class.name} has no students</p>
           </div>
         </Reveal>
       ) : (

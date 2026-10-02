@@ -4,17 +4,17 @@ import { sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 
 /**
- * 🗄️ Runtime migrations — production me drizzle-kit ke bina tables apply.
+ * 🗄️ Runtime migrations — apply tables in production without drizzle-kit.
  *
- * Kaise kaam karta hai:
- *  - `drizzle/0000_*.sql` file ko `--> statement-breakpoint` par split karta hai
- *  - Har statement `db.execute(sql.raw(...))` se chalta hai
+ * How it works:
+ *  - `drizzle/0000_*.sql` files are split on `--> statement-breakpoint`
+ *  - Every statement runs via `db.execute(sql.raw(...))`
  *    (production postgres-js `prepare: false` → simple query protocol)
- *  - `42P07 / 42710 / already exists` errors ignore — idempotent
- *  - Applied files `_vps_migrations` table me record — dobara nahi chalte
+ *  - `42P07 / 42710 / already exists` errors are ignored — idempotent
+ *  - Applied files are recorded in the `_vps_migrations` table — never re-run
  *
- * Vercel serverless me drizzle/ folder `outputFileTracingIncludes` se
- * function bundle me aata hai (next.config.ts).
+ * On Vercel serverless the drizzle/ folder is bundled into the function via
+ * `outputFileTracingIncludes` (next.config.ts).
  */
 
 const MIGRATIONS_DIR = path.join(process.cwd(), "drizzle");
@@ -38,14 +38,14 @@ export interface MigrateResult {
   statements: number;
 }
 
-/** Migration files run karo (jo pehle applied nahi hain). */
+/** Run migration files that have not been applied yet. */
 export async function runMigrations(): Promise<MigrateResult> {
   const files = fs
     .readdirSync(MIGRATIONS_DIR)
     .filter((f) => f.endsWith(".sql"))
     .sort();
 
-  // Tracking table — khud idempotent
+  // Tracking table — itself idempotent
   await db.execute(sql.raw(
     `CREATE TABLE IF NOT EXISTS "_vps_migrations" (
       "name" text PRIMARY KEY,

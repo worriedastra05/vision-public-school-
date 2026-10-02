@@ -14,9 +14,9 @@ npm run dev                                   # http://localhost:3000
 ### 🔑 Demo Logins
 | Role | Email | Password |
 |---|---|---|
-| 👑 Super Admin | `superadmin@visionpublicschool.edu` | `Super@123` |
-| 🛡️ Admin | `admin@visionpublicschool.edu` | `Admin@123` |
-| 🎓 Student | `student@visionpublicschool.edu` | `Student@123` |
+| 👑 Super Admin | `superadmin@visionpublicschool.com` | `Super@123` |
+| 🛡️ Admin | `admin@visionpublicschool.com` | `Admin@123` |
+| 🎓 Student | `VPS20260001` (admission no.) or `student@visionpublicschool.com` | `Student@123` |
 
 ## ✅ Phase 1 Complete — Foundation
 - 🔐 Auth.js v5 login (bcrypt hashed passwords, JWT sessions)
@@ -37,7 +37,7 @@ npm run dev                                   # http://localhost:3000
    - `AUTH_TRUST_HOST` — `true` **(bina iske login kaam nahi karega)**
 4. Deploy hone ke baad **ek baar** ye link kholo (tables + demo users ban jayenge):
    `https://<aapki-app>.vercel.app/api/setup?secret=<AUTH_SECRET>`
-   → `{"ok": true, ...}` aaya to bas! Login: `superadmin@visionpublicschool.edu / Super@123`
+   → `{"ok": true, ...}` aaya to bas! Login: `superadmin@visionpublicschool.com / Super@123`
 
 🛡️ Setup idempotent hai — galti se dobara kholo to kuch duplicate nahi hoga. Tables runtime migrations se banti hain (`drizzle/*.sql`), koi build-step/database-dashboard work NAHI chahiye.
 

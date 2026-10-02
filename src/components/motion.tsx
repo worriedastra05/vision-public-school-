@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Server-safe motion primitives (pure CSS animations, zero JS).
- * delay prop se staggered entrances banti hain — koi client component nahi chahiye!
+ * The delay prop creates staggered entrances — no client component needed!
  */
 
 interface RevealProps {

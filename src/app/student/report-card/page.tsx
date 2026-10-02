@@ -21,7 +21,7 @@ export default async function ReportCardPage() {
   });
   if (!student) redirect("/student/dashboard");
 
-  // Sirf PUBLISHED exams + apne marks
+  // Only PUBLISHED exams + own marks
   const examRows = await db.query.exams.findMany({
     where: (e, { and, eq }) => and(eq(e.classId, student.classId), eq(e.isPublished, true)),
     orderBy: [desc(exams.id)],
@@ -56,7 +56,7 @@ export default async function ReportCardPage() {
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
             <FileText className="mx-auto h-8 w-8 text-slate-300" />
             <p className="mt-3 text-sm text-slate-500">
-              Abhi tak koi result publish nahi hua — school publish karega to yahan dikhega
+              No results published yet — they will appear here once school publishes them
             </p>
           </div>
         </Reveal>

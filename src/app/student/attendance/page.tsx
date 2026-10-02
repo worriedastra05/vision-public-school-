@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { desc, eq } from "drizzle-orm";
-import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { attendance, students } from "@/db/schema";
 import { requireUser } from "@/lib/guards";
@@ -69,7 +68,7 @@ export default async function StudentAttendancePage() {
       <Reveal>
         <div>
           <h2 className="text-xl font-bold tracking-tight text-slate-900">My Attendance</h2>
-          <p className="text-sm text-slate-500">School ke marked records ke basis par (live)</p>
+          <p className="text-sm text-slate-500">Live, based on the records marked by school</p>
         </div>
       </Reveal>
 
@@ -103,7 +102,7 @@ export default async function StudentAttendancePage() {
                 <ClipboardCheck className="h-5 w-5 text-brand-600" />
                 {now.toLocaleDateString("en-IN", { month: "long", year: "numeric" })}
               </CardTitle>
-              <CardDescription>Is mahine ka calendar view</CardDescription>
+              <CardDescription>Calendar view for this month</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-7 gap-1.5 text-center text-[10px] font-semibold uppercase tracking-wide text-slate-400">
@@ -172,7 +171,7 @@ export default async function StudentAttendancePage() {
                 })}
                 {rows.length === 0 && (
                   <p className="py-6 text-center text-sm text-slate-400">
-                    Abhi tak koi attendance mark nahi hui — school mark karega to yahan dikhegi
+                    No attendance marked yet — it will appear here once school marks it
                   </p>
                 )}
               </div>

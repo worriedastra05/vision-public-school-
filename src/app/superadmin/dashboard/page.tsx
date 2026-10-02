@@ -41,8 +41,9 @@ export default async function SuperAdminDashboard() {
             <h2 className="font-display text-xl font-bold tracking-tight text-white">Welcome back, Super Admin</h2>
             <div className="gold-rule mt-2 w-16" />
             <p className="mt-2 text-sm leading-relaxed text-slate-400">
-              Aap <span className="font-semibold text-gold-300">{schoolName}</span> ke main control
-              panel me hain. Yahan se admins, settings, backups aur poora system manage hota hai.
+              You are in the main control panel of{" "}
+              <span className="font-semibold text-gold-300">{schoolName}</span>. Admins, settings,
+              backups and the entire system are managed from here.
             </p>
           </div>
         </div>
@@ -61,16 +62,16 @@ export default async function SuperAdminDashboard() {
         <Card className="card-hover">
           <CardHeader>
             <CardTitle>Super Admin Powers</CardTitle>
-            <CardDescription>Phase 1 foundation ready — ye modules next phases me activate honge</CardDescription>
+            <CardDescription>Everything below is live and ready to use</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-3 sm:grid-cols-2">
               {[
-                "Admin accounts create / edit / deactivate",
+                "Admin accounts: create / reset / deactivate",
                 "System settings (school info, session, grade formula)",
-                "Activity logs — kisne kab kya kiya",
+                "Activity logs — who did what, and when",
                 "Database backup & restore",
-                "Sab admin features ka full access",
+                "Full access to every admin feature",
                 "Roles & permissions control",
               ].map((power) => (
                 <div key={power} className="group flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm text-slate-600 transition-colors hover:bg-brand-50 hover:text-brand-700">

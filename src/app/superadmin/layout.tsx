@@ -5,7 +5,7 @@ import { DashboardShell } from "@/components/dashboard/shell";
 export default async function SuperAdminLayout({ children }: LayoutProps<"/superadmin">) {
   const session = await auth();
 
-  // Defense-in-depth: proxy.ts ke baad bhi layout par role check
+  // Defense-in-depth: role check at the layout even after proxy.ts
   if (!session) redirect("/login");
   if (session.user.role !== "SUPERADMIN") redirect("/");
 

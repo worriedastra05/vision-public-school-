@@ -59,7 +59,7 @@ export default async function FeesPage({
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 className="text-xl font-bold tracking-tight text-slate-900">Fees & Receipts</h2>
-            <p className="text-sm text-slate-500">Collections ka poora hisaab — receipts auto-generate hoti hain</p>
+            <p className="text-sm text-slate-500">The complete collections ledger — receipts auto-generate</p>
           </div>
           <div className="flex items-center gap-2">
             <Link href="/admin/fees/structure">
@@ -79,7 +79,7 @@ export default async function FeesPage({
       {deleted && (
         <Reveal>
           <div className="flex items-center gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
-            <CheckCircle2 className="h-4.5 w-4.5" /> Payment delete ho gaya
+            <CheckCircle2 className="h-4.5 w-4.5" /> Payment deleted
           </div>
         </Reveal>
       )}
@@ -143,7 +143,7 @@ export default async function FeesPage({
                           <form action={deletePayment} className="inline">
                             <input type="hidden" name="id" value={p.id} />
                             <ConfirmSubmit
-                              message={`Receipt ${p.receiptNo} (${inr(Number(p.amount))}) delete karein?`}
+                              message={`Delete receipt ${p.receiptNo} (${inr(Number(p.amount))})?`}
                               className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -161,7 +161,7 @@ export default async function FeesPage({
             <div className="p-12 text-center">
               <Wallet className="mx-auto h-8 w-8 text-slate-300" />
               <p className="mt-3 text-sm text-slate-500">
-                Abhi koi payment nahi — pehli payment collect karo, receipt turant banegi!
+                No payments yet — collect the first payment and the receipt is generated instantly!
               </p>
             </div>
           )}

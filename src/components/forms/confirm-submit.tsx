@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 
-/** Submit button jo pehle browser confirm dikhata hai (destructive actions ke liye) */
+/** Submit button that shows a browser confirm first (for destructive actions) */
 export function ConfirmSubmit({
   message,
   children,

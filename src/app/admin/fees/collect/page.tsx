@@ -54,7 +54,7 @@ export default async function CollectFinderPage({
           </Link>
           <div>
             <h2 className="text-xl font-bold tracking-tight text-slate-900">Collect Payment</h2>
-            <p className="text-sm text-slate-500">Pehle student dhoondo, phir payment lo</p>
+            <p className="text-sm text-slate-500">Find a student first, then take the payment</p>
           </div>
         </div>
       </Reveal>
@@ -63,7 +63,7 @@ export default async function CollectFinderPage({
         <form method="get" className="flex flex-wrap items-center gap-2.5">
           <div className="relative min-w-56 flex-1">
             <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-            <Input name="q" defaultValue={query} placeholder="Naam ya Admission No..." className="pl-10" />
+            <Input name="q" defaultValue={query} placeholder="Name or Admission No..." className="pl-10" />
           </div>
           <Select name="classId" defaultValue={classId ?? ""} className="w-44">
             <option value="">All Classes</option>
@@ -107,7 +107,7 @@ export default async function CollectFinderPage({
             <div className="p-12 text-center">
               <GraduationCap className="mx-auto h-8 w-8 text-slate-300" />
               <p className="mt-3 text-sm text-slate-500">
-                {query ? `"${query}" ke liye koi student nahi mila` : "Koi student nahi mila"}
+                {query ? `No students found for "${query}"` : "No students found"}
               </p>
             </div>
           )}

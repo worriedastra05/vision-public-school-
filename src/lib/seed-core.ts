@@ -13,8 +13,8 @@ import {
 } from "@/db/schema";
 
 /**
- * Idempotent seed — jitni baar chalao, data duplicate nahi hoga.
- * scripts/seed.ts (local) aur /api/setup (production first-run) dono isko use karte hain.
+ * Idempotent seed — run it as many times as you like, nothing duplicates.
+ * Both scripts/seed.ts (local) and /api/setup (production first-run) use this.
  */
 export async function runSeed(): Promise<{ steps: string[] }> {
   const steps: string[] = [];
@@ -24,7 +24,7 @@ export async function runSeed(): Promise<{ steps: string[] }> {
     school_name: "Vision Public School",
     school_address: "Main Road, Patna, Bihar 800001",
     school_phone: "+91 98765 43210",
-    school_email: "info@visionpublicschool.edu",
+    school_email: "info@visionpublicschool.com",
     school_tagline: "Education • Discipline • Excellence",
     gradeFormula: "A+:90,A:80,B:70,C:60,D:40,F:0",
   };
@@ -69,14 +69,14 @@ export async function runSeed(): Promise<{ steps: string[] }> {
 
   const superadmin = await ensureUser(
     "Super Admin",
-    "superadmin@visionpublicschool.edu",
+    "superadmin@visionpublicschool.com",
     "Super@123",
     "SUPERADMIN"
   );
-  await ensureUser("School Admin", "admin@visionpublicschool.edu", "Admin@123", "ADMIN");
+  await ensureUser("School Admin", "admin@visionpublicschool.com", "Admin@123", "ADMIN");
   const studentUser = await ensureUser(
     "Demo Student",
-    "student@visionpublicschool.edu",
+    "student@visionpublicschool.com",
     "Student@123",
     "STUDENT"
   );
@@ -132,7 +132,7 @@ export async function runSeed(): Promise<{ steps: string[] }> {
   if (!existingNotice) {
     await db.insert(notices).values({
       title: "Welcome to Vision Public School Portal 🎉",
-      body: "School Management System Phase 1 is live! Login karke apna dashboard dekhein.",
+      body: "The School Management System is live! Sign in to explore your dashboard — report cards, attendance, fees and ID cards are all in one place.",
       createdById: superadmin.id,
     });
     steps.push("notice:welcome");

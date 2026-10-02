@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-/** Number smoothly count-up on mount — sirf primitive props (RSC-safe) */
+/** Smoothly counts a number up on mount — primitive props only (RSC-safe) */
 export function CountUp({ target, duration = 900 }: { target: number; duration?: number }) {
   const [display, setDisplay] = useState(0);
 

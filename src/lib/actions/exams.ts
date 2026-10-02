@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { academicSessions, exams, marks, students, subjects } from "@/db/schema";
+import { academicSessions, exams, marks, subjects } from "@/db/schema";
 import { requireRole, logActivity } from "@/lib/guards";
 import { gradeFor } from "@/lib/grades";
 
@@ -18,7 +18,7 @@ const examSchema = z.object({
   endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().or(z.literal("")),
 });
 
-/** Naya exam create (draft state me; marks entry ke baad publish) */
+/** Create a new exam (draft state; publish after marks entry) */
 export async function createExam(formData: FormData) {
   const session = await requireRole(...MANAGERS);
 
@@ -28,13 +28,13 @@ export async function createExam(formData: FormData) {
     startDate: formData.get("startDate") || "",
     endDate: formData.get("endDate") || "",
   });
-  if (!parsed.success) redirect("/admin/exams?err=Details sahi nahi hain");
+  if (!parsed.success) redirect("/admin/exams?err=" + encodeURIComponent("The details are invalid"));
   const { name, classId, startDate, endDate } = parsed.data;
 
   // Duplicate check (same class + similar name)
   const existing = await db.query.exams.findMany({ where: eq(exams.classId, classId) });
   if (existing.some((e) => e.name.trim().toLowerCase() === name.toLowerCase())) {
-    redirect("/admin/exams?err=Is class me is naam ka exam pehle se hai");
+    redirect("/admin/exams?err=" + encodeURIComponent("An exam with this name already exists for this class"));
   }
 
   // Active session auto-attach
@@ -54,13 +54,13 @@ export async function createExam(formData: FormData) {
   redirect(`/admin/exams?created=${encodeURIComponent(name)}`);
 }
 
-/** Publish / unpublish result (students ko tabhi dikhta hai) */
+/** Publish / unpublish a result (only published results are visible to students) */
 export async function toggleExamPublished(formData: FormData) {
   const session = await requireRole(...MANAGERS);
   const id = String(formData.get("examId") ?? "");
 
   const exam = await db.query.exams.findFirst({ where: eq(exams.id, id) });
-  if (!exam) redirect("/admin/exams?err=Exam nahi mila");
+  if (!exam) redirect("/admin/exams?err=" + encodeURIComponent("Exam not found"));
 
   await db.update(exams).set({ isPublished: !exam.isPublished }).where(eq(exams.id, id));
   await logActivity(session.user.id, exam.isPublished ? "RESULT_UNPUBLISHED" : "RESULT_PUBLISHED", `Exam "${exam.name}"`);
@@ -70,12 +70,12 @@ export async function toggleExamPublished(formData: FormData) {
   redirect(`/admin/exams?${exam.isPublished ? "unpub" : "pub"}=${encodeURIComponent(exam.name)}`);
 }
 
-/** Exam delete (marks bhi cascade delete honge) */
+/** Delete an exam (its marks are cascade-deleted) */
 export async function deleteExam(formData: FormData) {
   const session = await requireRole(...MANAGERS);
   const id = String(formData.get("examId") ?? "");
   const exam = await db.query.exams.findFirst({ where: eq(exams.id, id) });
-  if (!exam) redirect("/admin/exams?err=Exam nahi mila");
+  if (!exam) redirect("/admin/exams?err=" + encodeURIComponent("Exam not found"));
 
   await db.delete(exams).where(eq(exams.id, id));
   await logActivity(session.user.id, "EXAM_DELETED", `Exam "${exam.name}" deleted`);
@@ -90,8 +90,8 @@ const markRecord = z.object({
   marks: z.number().min(0),
 });
 
-/** Bulk marks save — ek exam ki poori sheet. Idempotent (delete+insert transaction).
- *  Student class ke hain ya nahi, subject class ke hain ya nahi — server verify. */
+/** Bulk marks save — the full sheet for one exam. Idempotent (delete+insert transaction).
+ *  The server verifies that every student and subject belongs to the exam class. */
 export async function saveMarks(formData: FormData) {
   const session = await requireRole(...MANAGERS);
 
@@ -105,21 +105,21 @@ export async function saveMarks(formData: FormData) {
   }
 
   if (!examId || !Number.isFinite(maxMarks) || maxMarks <= 0 || maxMarks > 1000) {
-    redirect(`/admin/exams/${examId}/marks?err=Max marks sahi nahi hai`);
+    redirect(`/admin/exams/${examId}/marks?err=${encodeURIComponent("Max marks are invalid")}`);
   }
   const recordsParsed = z.array(markRecord).safeParse(raw ?? []);
   if (!recordsParsed.success || recordsParsed.data.length === 0) {
-    redirect(`/admin/exams/${examId}/marks?err=Koi marks nahi mile — kam se kam 1 entry karo`);
+    redirect(`/admin/exams/${examId}/marks?err=${encodeURIComponent("No marks received — enter at least 1 value")}`);
   }
 
   const exam = await db.query.exams.findFirst({
     where: eq(exams.id, examId),
     with: { class: { with: { students: { columns: { id: true } } } } },
   });
-  if (!exam) redirect("/admin/exams?err=Exam nahi mila");
-  if (exam.isPublished) redirect(`/admin/exams/${examId}/marks?err=Result PUBLISHED hai — edit ke liye pehle unpublish karo`);
+  if (!exam) redirect("/admin/exams?err=" + encodeURIComponent("Exam not found"));
+  if (exam.isPublished) redirect(`/admin/exams/${examId}/marks?err=${encodeURIComponent("The result is PUBLISHED — unpublish it before editing")}`);
 
-  // Server-side verify: student isi class ke & subject isi class ke
+  // Server-side verify: students and subjects belong to this class
   const validStudents = new Set(exam.class.students.map((s) => s.id));
   const classSubjects = await db
     .select({ id: subjects.id })
@@ -131,7 +131,7 @@ export async function saveMarks(formData: FormData) {
     (r) => validStudents.has(r.studentId) && validSubjects.has(r.subjectId) && r.marks <= maxMarks
   );
   if (clean.length === 0) {
-    redirect(`/admin/exams/${examId}/marks?err=Valid entries nahi mili (marks ≤ ${maxMarks} check karo)`);
+    redirect(`/admin/exams/${examId}/marks?err=${encodeURIComponent(`No valid entries found (marks must be ≤ ${maxMarks})`)}`);
   }
 
   await db.transaction(async (tx) => {
@@ -166,7 +166,7 @@ export async function saveMarks(formData: FormData) {
   redirect(`/admin/exams/${examId}/marks?saved=${clean.length}`);
 }
 
-/** Admin result view helper — subjects desc for stable columns */
+/** Placeholder export — keeps the desc import referenced */
 export async function _noop() {
   void desc;
 }

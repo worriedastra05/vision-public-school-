@@ -11,16 +11,16 @@ const ROLE_HOME: Record<string, string> = {
 };
 
 /**
- * 🛡️ Route Guard (Next.js 16 proxy convention — purana middleware.ts)
+ * 🛡️ Route Guard (Next.js 16 proxy convention — former middleware.ts)
  *
- * Har request par role verify hota hai:
- *  - /superadmin/*  → sirf SUPERADMIN
- *  - /admin/*       → ADMIN ya SUPERADMIN (superadmin sab kar sakta hai)
- *  - /student/*     → sirf STUDENT
- *  - /login         → logged-in user ko uske dashboard par redirect
+ * Every request is role-verified:
+ *  - /superadmin/*  → SUPERADMIN only
+ *  - /admin/*       → ADMIN or SUPERADMIN (a super admin can do everything)
+ *  - /student/*     → STUDENT only
+ *  - /login         → logged-in users are redirected to their dashboard
  *
- * Galat role se URL type karne par bhi access nahi milega —
- * user ko apne dashboard par wapas bhej diya jata hai.
+ * Typing a URL with the wrong role never grants access —
+ * the user is simply sent back to their own dashboard.
  */
 export default auth((req) => {
   const { nextUrl } = req;
@@ -28,13 +28,13 @@ export default auth((req) => {
   const role = session?.user?.role;
   const home = role ? (ROLE_HOME[role] ?? "/login") : "/login";
 
-  // Login page: already logged-in ho to apne dashboard bhejo
+  // Login page: already signed in? Send them to their dashboard
   if (nextUrl.pathname === "/login") {
     if (session) return NextResponse.redirect(new URL(home, nextUrl));
     return NextResponse.next();
   }
 
-  // Bina login = login page par
+  // No session = login page
   if (!session) {
     const loginUrl = new URL("/login", nextUrl);
     loginUrl.searchParams.set("callbackUrl", nextUrl.pathname);

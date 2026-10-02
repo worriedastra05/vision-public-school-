@@ -1,4 +1,4 @@
-/** Percentage se grade (CBSE-ish 8-grade scale) */
+/** Percentage → grade (CBSE-ish 8-grade scale) */
 export function gradeFor(pct: number): string {
   if (pct >= 90) return "A+";
   if (pct >= 75) return "A";

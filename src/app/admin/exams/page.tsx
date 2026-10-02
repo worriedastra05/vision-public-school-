@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { asc, desc, eq, inArray } from "drizzle-orm";
+import { desc, inArray } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { exams, marks, students } from "@/db/schema";
+import { exams, marks } from "@/db/schema";
 import { createExam, toggleExamPublished, deleteExam } from "@/lib/actions/exams";
 import { requireRole } from "@/lib/guards";
 import { Reveal } from "@/components/motion";
@@ -50,8 +50,6 @@ export default async function ExamsPage({
           .where(inArray(marks.examId, examRows.map((e) => e.id)))
       : [];
 
-  void asc; void students;
-
   // per-exam stats: subjects-with-marks coverage + students marked count
   const stats = new Map<string, { markedStudents: number; entries: number }>();
   for (const m of markRows) {
@@ -67,13 +65,13 @@ export default async function ExamsPage({
   const banner = err
     ? { ok: false, text: err }
     : created
-      ? { ok: true, text: `Exam "${created}" create ho gaya — ab marks entry karo, phir publish karo` }
+      ? { ok: true, text: `Exam "${created}" created — enter marks, then publish` }
       : deleted
-        ? { ok: true, text: `Exam "${deleted}" delete ho gaya` }
+        ? { ok: true, text: `Exam "${deleted}" deleted` }
         : pub
-          ? { ok: true, text: `"${pub}" PUBLISH ho gaya — students ko report card dikhega!` }
+          ? { ok: true, text: `"${pub}" PUBLISHED — students can now see their report cards!` }
           : unpub
-            ? { ok: true, text: `"${unpub}" unpublish ho gaya (students se hidden)` }
+            ? { ok: true, text: `"${unpub}" unpublished (hidden from students)` }
             : null;
 
   return (
@@ -211,7 +209,7 @@ export default async function ExamsPage({
                     <form action={deleteExam} className="inline">
                       <input type="hidden" name="examId" value={exam.id} />
                       <ConfirmSubmit
-                        message={`"${exam.name}" delete karein? Iski sab marks entries bhi delete hongi.`}
+                        message={`Delete "${exam.name}"? All its marks entries will also be deleted.`}
                         className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -230,7 +228,7 @@ export default async function ExamsPage({
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
             <FileText className="mx-auto h-8 w-8 text-slate-300" />
             <p className="mt-3 text-sm text-slate-500">
-              Koi exam nahi hai — upar form se pehla exam banao (jaise "Half Yearly")
+              No exams yet — create your first exam above (e.g. &quot;Half Yearly&quot;)
             </p>
           </div>
         </Reveal>

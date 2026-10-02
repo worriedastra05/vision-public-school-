@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { academicSessions, settings, students } from "@/db/schema";
 import type { IdCardStudent } from "@/components/id-card/student-id-card";
 
-/** Card rendering ke liye data bundle */
+/** Data bundle for card rendering */
 export async function getCardData(s: typeof students.$inferSelect & {
   user: { name: string };
   class: { name: string };
@@ -39,7 +39,7 @@ export async function getSchoolInfo() {
   };
 }
 
-/** Current request ka origin (QR encode ke liye — phone se khul sake) */
+/** Origin of the current request (for QR encoding — opens on phones) */
 export async function getOrigin() {
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
@@ -47,7 +47,7 @@ export async function getOrigin() {
   return `${proto}://${host}`;
 }
 
-/** Card validity = active session ka end */
+/** Card validity = end of the active session */
 export function validThrough(session: { endDate: Date } | null): string {
   if (!session) return "—";
   return session.endDate.toLocaleDateString("en-IN", { month: "long", year: "numeric" });

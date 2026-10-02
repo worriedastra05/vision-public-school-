@@ -55,7 +55,7 @@ export default async function TeachersPage({
       {created && (
         <Reveal>
           <div className="flex items-center gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
-            <CheckCircle2 className="h-4.5 w-4.5" /> &quot;{created}&quot; successfully add ho gaye!
+            <CheckCircle2 className="h-4.5 w-4.5" /> &quot;{created}&quot; added successfully!
           </div>
         </Reveal>
       )}
@@ -63,8 +63,8 @@ export default async function TeachersPage({
       <Reveal delay={70}>
         <div className="flex items-start gap-2.5 rounded-xl bg-slate-50 p-3.5 text-xs leading-relaxed text-slate-500">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand-500" />
-          Teacher ka <strong>login portal future phase</strong> me aayega — tabhi tak accounts&nbsp;
-          <strong>inactive</strong> rehte hain (koi login kar nahi sakta). Records manage hote rahenge.
+          A teacher <strong>login portal is coming in a future update</strong> — until then accounts
+          remain <strong>inactive</strong> (nobody can sign in). Records are fully managed here.
         </div>
       </Reveal>
 
@@ -110,7 +110,7 @@ export default async function TeachersPage({
                           <input type="hidden" name="id" value={row.id} />
                           <button
                             type="submit"
-                            title={row.isActive ? "Login disable karein" : "Login enable karein"}
+                            title={row.isActive ? "Disable login" : "Enable login"}
                             className={`rounded-lg p-2 transition-colors ${
                               row.isActive
                                 ? "text-emerald-500 hover:bg-emerald-50"
@@ -123,7 +123,7 @@ export default async function TeachersPage({
                         <form action={deleteTeacher}>
                           <input type="hidden" name="id" value={row.id} />
                           <ConfirmSubmit
-                            message={`${row.name} ko DELETE karein? Ye action undo nahi hoga.`}
+                            message={`DELETE ${row.name}? This action cannot be undone.`}
                             className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -140,7 +140,7 @@ export default async function TeachersPage({
           {rows.length === 0 && (
             <div className="p-12 text-center">
               <Users className="mx-auto h-8 w-8 text-slate-300" />
-              <p className="mt-3 text-sm text-slate-500">Abhi koi teacher nahi — pehla teacher add karein!</p>
+              <p className="mt-3 text-sm text-slate-500">No teachers yet — add your first teacher!</p>
             </div>
           )}
         </Card>

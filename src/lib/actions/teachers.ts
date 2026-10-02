@@ -30,24 +30,24 @@ async function nextEmployeeId(): Promise<string> {
 }
 
 /**
- * 👩‍🏫 Teacher add — record banega + (abhi ke liye) LOGIN DISABLED account.
- * Teacher portal aane par (future phase) admin activate kar dega.
+ * Add a teacher — creates the record + a LOGIN-DISABLED account for now.
+ * Once the teacher portal ships, an admin can activate the login.
  */
 export async function createTeacher(formData: FormData) {
   const session = await requireRole(...MANAGERS);
 
   const parsed = teacherSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
-    redirect("/admin/teachers/new?err=" + encodeURIComponent("Form data sahi nahi hai"));
+    redirect("/admin/teachers/new?err=" + encodeURIComponent("The form data is invalid"));
   }
   const d = parsed.data;
 
   const employeeId = await nextEmployeeId();
-  const email = `${employeeId.toLowerCase().replace("-", "")}@teacher.visionpublicschool.edu`;
+  const email = `${employeeId.toLowerCase().replace("-", "")}@teacher.visionpublicschool.com`;
 
   try {
     await db.transaction(async (tx) => {
-      // random password (nobody knows it; account inactive hai)
+      // random password (nobody knows it; the account stays inactive)
       const [user] = await tx
         .insert(users)
         .values({
@@ -55,7 +55,7 @@ export async function createTeacher(formData: FormData) {
           email,
           password: await bcrypt.hash(crypto.randomUUID(), 10),
           role: "TEACHER",
-          isActive: false, // teacher portal Phase 2+ (baad me) — tab activate hoga
+          isActive: false, // activated later when the teacher portal ships
         })
         .returning();
 
@@ -68,7 +68,7 @@ export async function createTeacher(formData: FormData) {
     });
   } catch (e) {
     console.error("createTeacher failed:", e);
-    redirect("/admin/teachers/new?err=" + encodeURIComponent("Teacher add nahi ho paya. Dobara try karein."));
+    redirect("/admin/teachers/new?err=" + encodeURIComponent("The teacher could not be added. Please try again."));
   }
 
   await logActivity(session.user.id, "TEACHER_ADDED", `${d.name} → ${employeeId}`);
@@ -105,7 +105,7 @@ export async function deleteTeacher(formData: FormData) {
   const teacher = await db.query.teachers.findFirst({ where: eq(teachers.id, teacherId) });
   if (!teacher) redirect("/admin/teachers");
 
-  // User delete -> teacher cascade delete ho jayega
+  // Deleting the user cascade-deletes the teacher record
   await db.delete(users).where(eq(users.id, teacher.userId));
   await logActivity(session.user.id, "TEACHER_DELETED", teacher.employeeId);
   revalidatePath("/admin/teachers");
